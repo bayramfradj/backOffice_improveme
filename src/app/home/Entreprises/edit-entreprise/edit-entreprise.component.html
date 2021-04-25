@@ -1,0 +1,145 @@
+<div class="container-fluid  dashboard-content">
+
+
+  <!-- ============================================================== -->
+  <!-- pageheader -->
+  <!-- ============================================================== -->
+  <div class="row">
+    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+      <div class="page-header">
+        <h2 class="pageheader-title">ENTREPRISES</h2>
+        <div class="page-breadcrumb">
+          <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item"><a routerLink="/" class="breadcrumb-link">Dashboard</a></li>
+              <li class="breadcrumb-item"><a routerLink="/entreprises" class="breadcrumb-link">Entreprises</a></li>
+              <li class="breadcrumb-item active" aria-current="page">Modifier</li>
+            </ol>
+          </nav>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- ============================================================== -->
+  <!-- end pageheader -->
+  <!-- ============================================================== -->
+
+  <div class="row">
+    <!-- ============================================================== -->
+    <!-- basic table  -->
+    <!-- ============================================================== -->
+    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+      <div class="card">
+        <h5 class="card-header">Modifier Entreprises</h5>
+        <div class="card-body">
+
+
+            <ng-container *ngIf="appState  as result" [ngSwitch]="result.dataState">
+
+              <ng-container *ngSwitchCase="DataStateEnum.LOADING">
+                <div class="col-4  offset-4" >
+                  <img src="assets/images/loading.gif" style="margin-left: 15%">
+                </div>
+              </ng-container>
+
+              <ng-container *ngSwitchCase="DataStateEnum.LOADED">
+
+                <form>
+                  <div class="form-group">
+                    <label for="entrepriseName" class="col-form-label" >Nom d'Entreprise :</label>
+                    <input id="entrepriseName" [(ngModel)]="user.entrepriseName " #eName="ngModel" name="entrepriseName"
+                           type="text" class="form-control" placeholder="Nom d'Entreprise" required=""
+                           [ngClass]="{'is-valid': eName.touched && !eName.errors?.required ,
+                                 'is-invalid': eName.touched && eName.errors?.required}"
+                    >
+                    <div class="feedback-error" *ngIf="eName.touched && eName.errors?.required" >
+                      Nom d'Entreprise est obligatoire.
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="email" class="col-form-label">Email :</label>
+                    <input id="email" type="email" class="form-control" placeholder="Email" required=""
+                           [(ngModel)]="user.email" #em="ngModel" name="email"
+                           pattern="[a-zA-Z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,3}$"
+                           [ngClass]="{'is-valid': em.touched && !em.errors?.pattern && !em.errors?.required && !vmail,
+                                 'is-invalid': em.touched && (em.errors?.pattern || em.errors?.required || vmail)}"
+                           (blur)="verifMail()"
+                    >
+
+                    <div class="feedback-error" *ngIf="(em.touched || em.dirty) && em.errors?.required">
+                      Email est obligatoire.
+                    </div>
+
+                    <div class="feedback-error" *ngIf="(em.touched || em.dirty) && em.errors?.pattern">
+                      Veuillez respecter le format de l'email (exemple@domaine.com).
+                    </div>
+
+                    <div class="feedback-error" *ngIf="(em.touched || em.dirty) && vmail">
+                      Email existe deja.
+                    </div>
+
+                  </div>
+
+                  <div class="form-group">
+                    <label for="username" class="col-form-label">Username :</label>
+                    <input id="username" type="text" class="form-control" [(ngModel)]="user.username"
+                           name="username" placeholder="Username" #us="ngModel" required=""
+                           [ngClass]="{'is-valid': us.touched && !us.errors?.required && !vusername,
+                                 'is-invalid': us.touched && (us.errors?.required || vusername)}"
+                           (blur)="verifUsername()"
+                    >
+                    <div class="feedback-error" *ngIf="(us.touched || us.dirty) && us.errors?.required">
+                      Username est obligatoire.
+                    </div>
+                    <div class="feedback-error" *ngIf="(em.touched ) && vusername">
+                      Username existe deja.
+                    </div>
+                  </div>
+
+
+
+                  <div class="form-group row ">
+
+                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 ">
+                      <button class="btn btn-space btn-dark"  (click)="submite()"
+                              [disabled]="eName.errors?.required || em.errors?.pattern
+                              || us.errors?.required || vmail || vusername">Modifier</button>
+                      <button class="btn btn-space btn-secondary" (click)="reset()">Annuler</button>
+                    </div>
+                  </div>
+
+
+
+
+                </form>
+
+              </ng-container>
+
+
+              <ng-container *ngSwitchCase="DataStateEnum.ERROR">
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                  <strong>Erreur!</strong> {{result.errorMessage}}.
+                  <a href="#" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                  </a>
+                </div>
+              </ng-container>
+
+
+
+
+
+            </ng-container>
+
+
+
+        </div>
+      </div>
+    </div>
+    <!-- ============================================================== -->
+    <!-- end basic table  -->
+    <!-- ============================================================== -->
+  </div>
+
+
+</div>

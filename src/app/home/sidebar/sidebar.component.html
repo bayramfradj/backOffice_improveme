@@ -1,0 +1,74 @@
+<div class="nav-left-sidebar sidebar-dark" >
+  <div class="menu-list">
+    <nav class="navbar navbar-expand-lg navbar-light">
+      <a class="d-xl-none d-lg-none" href="#">Dashboard</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav flex-column">
+          <li class="nav-divider">
+            Menu
+          </li>
+
+          <!-- pour l'administrateur -->
+          <li class="nav-item" *ngIf="role === 'ADMIN' ">
+            <a class="nav-link"  data-toggle="collapse" [ngClass]="{'active' : ne.isActive || ae.isActive} " aria-expanded="false" data-target="#submenu-1" aria-controls="submenu-1"><i class="fas fa-f fa-folder"></i>Entreprises</a>
+            <div id="submenu-1" class="collapse submenu" style="" [ngClass]="{'show' : ne.isActive || ae.isActive}">
+              <ul class="nav flex-column">
+                <li class="nav-item">
+                  <a class="nav-link" routerLink="/entreprises/Ajouter" routerLinkActive="active" #ne="routerLinkActive" >Ajouter Entreprise</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" routerLink="/entreprises" routerLinkActive="active" #ae="routerLinkActive" [routerLinkActiveOptions]="{exact: true}">Toutes les Entreprises</a>
+                </li>
+              </ul>
+            </div>
+          </li>
+
+          <li class="nav-item" *ngIf="role === 'ADMIN'">
+            <a [ngClass]="{'active' : nc.isActive || ac.isActive}" aria-controls="submenu-2" aria-expanded="false"
+               class="nav-link " data-target="#submenu-2" data-toggle="collapse"><i class="fas fa-f fa-folder"></i>Coachs</a>
+            <div id="submenu-2" class="collapse submenu" style="" [ngClass]="{'show' : nc.isActive || ac.isActive}">
+              <ul class="nav flex-column" >
+                <li class="nav-item">
+                  <a class="nav-link" routerLink="/coaches/Ajouter" routerLinkActive="active" #nc="routerLinkActive" >Ajouter Coach</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" routerLink="/coaches" routerLinkActive="active" #ac="routerLinkActive" [routerLinkActiveOptions]="{exact: true}">Tous les Coachs</a>
+                </li>
+              </ul>
+            </div>
+          </li>
+
+          <li class="nav-item" *ngIf="role === 'ADMIN' || role === 'ENTREPRISE'  ">
+            <a [ngClass]="{'active' : nc.isActive || ac.isActive || mi.isActive}" aria-controls="submenu-3" aria-expanded="false"
+               class="nav-link " data-target="#submenu-3" data-toggle="collapse"><i class="fas fa-f fa-folder"></i>Missions</a>
+            <div id="submenu-3" class="collapse submenu" style="" [ngClass]="{'show' : nc.isActive || ac.isActive || mi.isActive}">
+              <ul class="nav flex-column" >
+                <li class="nav-item">
+                  <a class="nav-link" routerLink="/mission/Ajouter" routerLinkActive="active" #nc="routerLinkActive" >Ajouter Mission</a>
+                </li>
+                <li class="nav-item" >
+                  <a class="nav-link" routerLink="/mission/Publier" routerLinkActive="active" #ac="routerLinkActive" [routerLinkActiveOptions]="{exact: true}">Tous les Missions Publié</a>
+                </li>
+                <li class="nav-item" >
+                  <a class="nav-link" routerLink="/mission/Invitation" routerLinkActive="active" #mi="routerLinkActive" [routerLinkActiveOptions]="{exact: true}">Tous les Demende d'ajout Mission</a>
+                </li>
+              </ul>
+            </div>
+          </li>
+
+          <li class="nav-item" *ngIf="role === 'ADMIN'">
+            <a  class="nav-link" routerLink="/contacts" routerLinkActive="active" >
+              <i class="fas fa-f fa-folder"></i>Contacts
+            </a>
+
+          </li>
+
+
+        </ul>
+      </div>
+    </nav>
+  </div>
+</div>

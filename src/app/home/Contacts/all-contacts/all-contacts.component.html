@@ -1,0 +1,201 @@
+<div class="container-fluid  dashboard-content">
+
+
+  <!-- ============================================================== -->
+  <!-- pageheader -->
+  <!-- ============================================================== -->
+  <div class="row">
+    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+      <div class="page-header">
+        <h2 class="pageheader-title">CONTACTS</h2>
+        <div class="page-breadcrumb">
+          <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item"><a routerLink="/" class="breadcrumb-link">Dashboard</a></li>
+              <li class="breadcrumb-item active" aria-current="page">Contacts</li>
+            </ol>
+          </nav>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- ============================================================== -->
+  <!-- end pageheader -->
+  <!-- ============================================================== -->
+
+  <div class="row">
+    <!-- ============================================================== -->
+    <!-- basic table  -->
+    <!-- ============================================================== -->
+    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+      <div class="card">
+        <h5 class="card-header">Tout Les Contacts</h5>
+        <div class="card-body">
+          <div class="table-responsive">
+
+            <ng-container *ngIf="contacts$ | async as result" [ngSwitch]="result.dataState">
+
+              <ng-container *ngSwitchCase="DataStateEnum.LOADING">
+                <div class="col-4  offset-4" >
+                  <img src="assets/images/loading.gif" style="margin-left: 15%">
+                </div>
+              </ng-container>
+
+              <ng-container *ngSwitchCase="DataStateEnum.LOADED">
+
+                <table class="table row-border hover " datatable >
+                  <thead>
+                  <tr>
+                    <th>Nom et Prenom</th>
+                    <th>Email</th>
+                    <th>Message</th>
+                    <th>État</th>
+                    <th>Action</th>
+                  </tr>
+                  </thead>
+
+                  <tbody *ngFor="let contact of result.data; let i = index ">
+                  <tr>
+                    <td>{{contact.name}}</td>
+                    <td>{{contact.email}}</td>
+                    <td>
+                      <textarea class="form-control" disabled [value]="contact.message"></textarea>
+                    </td>
+                    <td>
+                      <span class="mr-2" *ngIf="contact.isDone"><span class="badge-dot badge-success"></span>Traité</span>
+                      <span class="mr-2" *ngIf="!contact.isDone"><span class="badge-dot badge-warning"></span>En attente</span>
+
+                    </td>
+                    <td>
+                      <button type="button" data-toggle="dropdown" class="btn btn-default dropdown-toggle" aria-expanded="false">Action</button>
+                      <div class="dropdown-menu" x-placement="top-start" style="position: absolute; transform: translate3d(655px, -153px, 0px); top: 0px; left: 0px; will-change: transform;">
+                        <button type="button" class="dropdown-item" data-toggle="modal" attr.data-target="#{{contact.id}}">Supprimer</button>
+                        <button type="button" class="dropdown-item" *ngIf="!contact.isDone" (click)="loadDataInForm(contact)" data-toggle="modal" data-target="#sendmail">Répondre</button>
+
+                      </div>
+
+
+                      <!-- Modal suppression -->
+                      <div class="modal fade"  id="{{contact.id}}" tabindex="-1" role="dialog" aria-labelledby="Label" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h5 class="modal-title" id="Label">Suppression Contact </h5>
+                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                              </button>
+                            </div>
+                            <div class="modal-body">
+                              <p>vous voulez  vraiment supprimer ce contact ? </p>
+                            </div>
+                            <div class="modal-footer">
+                              <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+                              <button type="button" (click)="delete(contact)" data-dismiss="modal" class="btn btn-primary">Supprimer</button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+
+                    </td>
+
+                  </tr>
+                  </tbody>
+
+                  <tfoot>
+                  <tr>
+                    <th>Nom et Prenom</th>
+                    <th>Email</th>
+                    <th>Message</th>
+                    <th>État</th>
+                    <th>Action</th>
+                  </tr>
+                  </tfoot>
+                </table>
+
+                <!-- Modal Répondre -->
+                <div class="modal fade"  id="sendmail" tabindex="-1" role="dialog" aria-labelledby="Label" aria-hidden="true">
+                  <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" >Envoyer Email </h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div class="modal-body">
+
+                        <form>
+                            <div class="form-group form-inline">
+                              <label  class="col-md-2" >À: </label>
+                              <input value="{{mail.sendTo}}" disabled type="text" class="form-control col-md-10" >
+                            </div>
+                          <div class="form-group form-inline">
+                            <label  class="col-md-2" >Objet: </label>
+                            <input type="text" class="form-control col-md-10" placeholder="Objet" name="subject"
+                                   [(ngModel)]="mail.subject" #s="ngModel" required=""
+                                   [ngClass]="{'is-valid': s.touched && !s.errors?.required ,
+                                               'is-invalid': s.touched && s.errors?.required}"
+                            >
+                            <div class="feedback-error offset-2" *ngIf="s.touched && s.errors?.required" >
+                              Objet est obligatoire.
+                            </div>
+                          </div>
+                          <div class="form-group form-inline">
+                            <label  class="col-md-2" >Message: </label>
+                            <textarea class="form-control col-md-10" placeholder="Message" name="message"
+                                      [(ngModel)]="mail.message" #ms="ngModel" required=""
+                                      [ngClass]="{'is-valid': ms.touched && !ms.errors?.required ,
+                                               'is-invalid': ms.touched && ms.errors?.required}"
+                            ></textarea>
+                            <div class="feedback-error offset-2" *ngIf="ms.touched && ms.errors?.required" >
+                              Message est obligatoire.
+                            </div>
+                          </div>
+                        </form>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+                        <button type="button" data-dismiss="modal" [disabled]="!ms.valid || !s.valid" (click)="sendMail()" class="btn btn-primary">Envoyer</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+
+              </ng-container>
+
+
+              <ng-container *ngSwitchCase="DataStateEnum.ERROR">
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                  <strong>Erreur!</strong> {{result.errorMessage}}.
+                  <a href="#" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                  </a>
+                </div>
+              </ng-container>
+
+
+
+
+
+            </ng-container>
+
+
+
+
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- ============================================================== -->
+    <!-- end basic table  -->
+    <!-- ============================================================== -->
+  </div>
+
+
+</div>
+
+
+
+

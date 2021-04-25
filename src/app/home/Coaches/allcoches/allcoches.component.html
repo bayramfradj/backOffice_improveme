@@ -1,0 +1,153 @@
+<div class="container-fluid  dashboard-content">
+
+
+  <!-- ============================================================== -->
+  <!-- pageheader -->
+  <!-- ============================================================== -->
+  <div class="row">
+    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+      <div class="page-header">
+        <h2 class="pageheader-title">COACHS</h2>
+        <div class="page-breadcrumb">
+          <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item"><a routerLink="/" class="breadcrumb-link">Dashboard</a></li>
+              <li class="breadcrumb-item active" aria-current="page">Coachs</li>
+            </ol>
+          </nav>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- ============================================================== -->
+  <!-- end pageheader -->
+  <!-- ============================================================== -->
+
+  <div class="row">
+    <!-- ============================================================== -->
+    <!-- basic table  -->
+    <!-- ============================================================== -->
+    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+      <div class="card">
+        <h5 class="card-header">Tous Les Coachs</h5>
+        <div class="card-body">
+          <div class="table-responsive">
+
+            <ng-container *ngIf="users$ | async as result" [ngSwitch]="result.dataState">
+
+              <ng-container *ngSwitchCase="DataStateEnum.LOADING">
+                <div class="col-4  offset-4" >
+                  <img src="assets/images/loading.gif" style="margin-left: 15%">
+                </div>
+              </ng-container>
+
+              <ng-container *ngSwitchCase="DataStateEnum.LOADED">
+
+                <table class="table row-border hover " datatable >
+                  <thead>
+                  <tr>
+                    <th>Nom et Prenom</th>
+                    <th>Email</th>
+                    <th>Username</th>
+                    <th>Etat</th>
+                    <th>Action</th>
+                  </tr>
+                  </thead>
+
+                  <tbody *ngFor="let user of result.data; let i = index ">
+                  <tr>
+                    <td>{{user.lastName}}  {{user.firstName}}</td>
+                    <td>{{user.email}}</td>
+                    <td>{{user.username}}</td>
+                    <td>
+                      <span class="mr-2" *ngIf="user.enabled"><span class="badge-dot badge-success"></span>activé</span>
+                      <span class="mr-2" *ngIf="!user.enabled"><span class="badge-dot badge-danger"></span>désactivé</span>
+
+                    </td>
+                    <td>
+
+                      <button type="button" data-toggle="dropdown" class="btn btn-default dropdown-toggle" aria-expanded="false">Action</button>
+                      <div class="dropdown-menu" x-placement="top-start" style="position: absolute; transform: translate3d(655px, -153px, 0px); top: 0px; left: 0px; will-change: transform;">
+                        <a  class="dropdown-item" [routerLink]="['/coaches/Modifier/',user.id]">Modifier</a>
+                        <button (click)="Active(user)" *ngIf="!user.enabled" class="dropdown-item">Activer</button>
+                        <div class="dropdown-divider" *ngIf="user.enabled"></div>
+                        <button type="button"  *ngIf="user.enabled" class="dropdown-item" data-toggle="modal" attr.data-target="#{{user.id}}">Desactiver</button>
+
+
+                      </div>
+
+
+                      <!-- Modal -->
+                      <div class="modal fade" *ngIf="user.enabled" id="{{user.id}}" tabindex="-1" role="dialog" aria-labelledby="Label" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h5 class="modal-title" id="Label">Désactivation {{user.lastName}} {{user.firstName}}</h5>
+                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                              </button>
+                            </div>
+                            <div class="modal-body">
+                              <p>vous voulez  vraiment desactiver  {{user.lastName}} {{user.firstName}} ? </p>
+                            </div>
+                            <div class="modal-footer">
+                              <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+                              <button type="button" (click)="Disactiver(user)" data-dismiss="modal" class="btn btn-primary">Desactiver</button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+
+
+                    </td>
+                  </tr>
+                  </tbody>
+
+                  <tfoot>
+                  <tr>
+                    <th>Nom et Prenom</th>
+                    <th>Email</th>
+                    <th>Username</th>
+                    <th>Etat</th>
+                    <th>Action</th>
+                  </tr>
+                  </tfoot>
+                </table>
+
+              </ng-container>
+
+
+              <ng-container *ngSwitchCase="DataStateEnum.ERROR">
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                  <strong>Erreur!</strong> {{result.errorMessage}}.
+                  <a href="#" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                  </a>
+                </div>
+              </ng-container>
+
+
+
+
+
+            </ng-container>
+
+
+
+
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- ============================================================== -->
+    <!-- end basic table  -->
+    <!-- ============================================================== -->
+  </div>
+
+
+</div>
+
+
+
+

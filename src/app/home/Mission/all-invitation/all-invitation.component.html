@@ -1,0 +1,183 @@
+<div class="container-fluid  dashboard-content">
+
+
+  <!-- ============================================================== -->
+  <!-- pageheader -->
+  <!-- ============================================================== -->
+  <div class="row">
+    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+      <div class="page-header">
+        <h2 class="pageheader-title">Mission </h2>
+        <div class="page-breadcrumb">
+          <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item"><a routerLink="/" class="breadcrumb-link">Dashboard</a></li>
+              <li class="breadcrumb-item active" aria-current="page">Demende D'ajout Mission</li>
+            </ol>
+          </nav>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- ============================================================== -->
+  <!-- end pageheader -->
+  <!-- ============================================================== -->
+
+  <div class="row">
+    <!-- ============================================================== -->
+    <!-- basic table  -->
+    <!-- ============================================================== -->
+    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+      <div class="card">
+        <h5 class="card-header">Toutes Les Demendes</h5>
+        <div class="card-body">
+          <div class="table-responsive">
+
+            <ng-container *ngIf="missions$ | async as result" [ngSwitch]="result.dataState">
+
+              <ng-container *ngSwitchCase="DataStateEnum.LOADING">
+                <div class="col-4  offset-4" >
+                  <img src="assets/images/loading.gif" style="margin-left: 15%">
+                </div>
+              </ng-container>
+
+              <ng-container *ngSwitchCase="DataStateEnum.LOADED">
+
+                <table class="table row-border hover " datatable >
+                  <thead>
+                  <tr>
+                    <th>Titre</th>
+                    <th>Description</th>
+                    <th>Type</th>
+                    <th>Publier par </th>
+                    <th>Date Début</th>
+                    <th>Date Fin</th>
+                    <th>Action</th>
+                  </tr>
+                  </thead>
+
+                  <tbody>
+                  <tr *ngFor="let m of result.data">
+                    <td>{{m.title}}</td>
+                    <td><p style="max-width: 150px">{{m.description}}</p></td>
+                    <td>{{m.typeMission}}</td>
+                    <td>{{m.entrepriseName}}</td>
+                    <td>{{m.startDate | date: 'dd/MM/yyyy'}}</td>
+                    <td>{{m.endDate | date: 'dd/MM/yyyy'}}</td>
+                    <td>
+
+                      <button type="button" data-toggle="dropdown" class="btn btn-default dropdown-toggle" aria-expanded="false">Action</button>
+                      <div class="dropdown-menu" x-placement="top-start" style="position: absolute; transform: translate3d(655px, -153px, 0px); top: 0px; left: 0px; will-change: transform;">
+                        <button type="button"  class="dropdown-item" data-toggle="modal"  data-target="#rep" (click)="loadSelctedMission(m)">Repondre</button>
+
+                      </div>
+
+                    </td>
+                  </tr>
+                  </tbody>
+
+                  <tfoot>
+                  <tr>
+                    <th>Titre</th>
+                    <th>Description</th>
+                    <th>Type</th>
+                    <th>Publier par </th>
+                    <th>Date Début</th>
+                    <th>Date Fin</th>
+                    <th>Action</th>
+                  </tr>
+                  </tfoot>
+                </table>
+
+                <!-- Modal Rep demande -->
+                <div class="modal fade "  id="rep" tabindex="-1" role="dialog" aria-labelledby="repLabel" aria-hidden="true">
+                  <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header ">
+                        <h2 class="modal-title ml-lg-auto" id="repLabel">{{selectedMission.title}}</h2>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div class="modal-body" style="max-height: 470px; overflow-x: auto; overflow-y: scroll; overflow-scrolling: auto;">
+                        <h3>Description :</h3>
+                        <h5 class="ml-3">{{selectedMission.description}}</h5>
+                        <p class="ml-3 text-dark"> Mission de type <b>{{selectedMission.typeMission}}, </b>
+                        publié par : <b>{{selectedMission.entrepriseName}}, </b>
+                        du  <b>{{selectedMission.startDate | date: 'd/MM/yyyy'}}</b> à <b>{{selectedMission.endDate | date: 'd/MM/yyyy'}}.</b></p>
+                        <hr>
+                        <h3>Détails Mission : </h3>
+                        <br>
+                        <div class="ml-3 " [innerHTML]="selectedMission.content">
+
+                        </div>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" (click)="Rejecter()" data-dismiss="modal">Rejecter</button>
+                        <button type="button" (click)="approver()" data-dismiss="modal" data-toggle="modal"  data-target="#coach" class="btn btn-primary">Publier</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Modal afecter Coach -->
+                <div class="modal fade"  id="coach" tabindex="-1" role="dialog" aria-labelledby="Label" aria-hidden="true">
+                  <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="Label">Affectation Coach</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div class="modal-body">
+                        <div class="form-group">
+                          <label for="coachsl" class="col-form-label" >Affecter coach dans cette mission:</label>
+                          <select  id="coachsl"
+                                   class="form-control" required="" #coa
+                                   (change)="onCahngeCoach(coa.selectedIndex)"
+                          >
+                            <option >Selctionnez Coach</option>
+                            <option *ngFor="let co of coaches" [value]="co" [label]="co.firstName +' '+ co.lastName?.toUpperCase()"  ></option>
+                          </select>
+
+                        </div>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" (click)="update()" data-dismiss="modal" class="btn btn-primary">Enregistrer</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+
+              </ng-container>
+
+
+              <ng-container *ngSwitchCase="DataStateEnum.ERROR">
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                  <strong>Erreur!</strong> {{result.errorMessage}}.
+                  <a href="#" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                  </a>
+                </div>
+              </ng-container>
+
+
+
+
+
+            </ng-container>
+
+
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- ============================================================== -->
+    <!-- end basic table  -->
+    <!-- ============================================================== -->
+  </div>
+
+
+</div>

@@ -1,0 +1,198 @@
+<div class="container-fluid  dashboard-content">
+
+
+  <!-- ============================================================== -->
+  <!-- pageheader -->
+  <!-- ============================================================== -->
+  <div class="row">
+    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+      <div class="page-header">
+        <h2 class="pageheader-title">MISSIONS</h2>
+        <div class="page-breadcrumb">
+          <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item"><a routerLink="/" class="breadcrumb-link">Dashboard</a></li>
+              <li class="breadcrumb-item"><a routerLink="/mission" class="breadcrumb-link">Mission</a></li>
+              <li class="breadcrumb-item active" aria-current="page">Modifier</li>
+            </ol>
+          </nav>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- ============================================================== -->
+  <!-- end pageheader -->
+  <!-- ============================================================== -->
+
+  <div class="row">
+    <!-- ============================================================== -->
+    <!-- basic table  -->
+    <!-- ============================================================== -->
+    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+      <div class="card">
+        <h5 class="card-header">Modifier Mission</h5>
+        <div class="card-body">
+
+
+          <ng-container *ngIf="appState  as result" [ngSwitch]="result.dataState">
+
+            <ng-container *ngSwitchCase="DataStateEnum.LOADING">
+              <div class="col-4  offset-4" >
+                <img src="assets/images/loading.gif" style="margin-left: 15%">
+              </div>
+            </ng-container>
+
+            <ng-container *ngSwitchCase="DataStateEnum.LOADED">
+            <form>
+              <div class="form-group">
+                <label for="Titre" class="col-form-label" >Titre de Mission :</label>
+                <input id="Titre" [(ngModel)]="mission.title" #title="ngModel" name="title"
+                       type="text" class="form-control" placeholder="Titre" required=""
+                       [ngClass]="{'is-valid': title.touched && !title.errors?.required ,
+                                 'is-invalid': title.touched && title.errors?.required}"
+                >
+                <div class="feedback-error" *ngIf="title.touched && title.errors?.required" >
+                  Titre est obligatoire.
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="desc" class="col-form-label" >Description :</label>
+                <textarea id="desc" class="form-control" [(ngModel)]="mission.description"
+                          rows="3" required #desc="ngModel" placeholder="Description" name="description"
+                          [ngClass]="{'is-valid': desc.touched && desc.value ,
+                                 'is-invalid': desc.touched && !desc.value}"
+                ></textarea>
+                <div class="feedback-error" *ngIf="desc.touched && !desc.value" >
+                  Description est obligatoire.
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="type" class="col-form-label" >Type :</label>
+                <select [(ngModel)]="mission.typeMission" id="type" name="typeMission"
+                        #typee="ngModel" class="form-control" required=""
+                        [ngClass]="{'is-valid': typee.touched && typee.value != null ,
+                                 'is-invalid': typee.touched && typee.value == null}"
+
+                >
+                  <option *ngFor="let typem of type" [value]="typem" [label]="typem.toString()"  ></option>
+                </select>
+                <div class="feedback-error" *ngIf="!typee.value && typee.touched " >
+                  Type est obligatoire.
+                </div>
+              </div>
+
+              <div class="form-group" *ngIf="role === 'ADMIN' && typee.value != TypeMission.PROTOTYPE">
+                <label for="coach" class="col-form-label" >Coach :</label>
+                <select [(ngModel)]="mission.coachId" id="coach" name="coachId"
+                        #coid="ngModel" class="form-control" required=""
+                        [ngClass]="{'is-valid': coid.touched && coid.value != null ,
+                                 'is-invalid': coid.touched && coid.value == null}"
+
+                >
+                  <option *ngFor="let co of coaches" [value]="co.id" [label]="co.firstName +' '+ co.lastName.toUpperCase()"  ></option>
+                </select>
+                <div class="feedback-error" *ngIf="!coid.value && coid.touched " >
+                  Coach est obligatoire.
+                </div>
+              </div>
+
+
+              <div class="row" *ngIf="typee.value == TypeMission.FORMATION">
+                <div class="form-group col-6">
+                  <label for="price" class="col-form-label" >Prix :</label>
+                  <input id="price" [(ngModel)]="mission.price" #price="ngModel" name="price"
+                         type="number" class="form-control" placeholder="Prix" required=""
+                         [ngClass]="{'is-valid': price.touched && !price.errors?.required ,
+                                 'is-invalid': price.touched && price.errors?.required}"
+                  >
+                  <div class="feedback-error" *ngIf="price.touched && price.errors?.required" >
+                    Prix est obligatoire.
+                  </div>
+                </div>
+                <div class="form-group col-6">
+                  <label for="place" class="col-form-label" >Nombre de place :</label>
+                  <input id="place" [(ngModel)]="mission.nbrplace" #nbrplace="ngModel" name="nbrplace"
+                         type="number" class="form-control" placeholder="Nombre de place" required=""
+                         [ngClass]="{'is-valid': nbrplace.touched && !nbrplace.errors?.required ,
+                                 'is-invalid': nbrplace.touched && nbrplace.errors?.required}"
+                  >
+                  <div class="feedback-error" *ngIf="nbrplace.touched && nbrplace.errors?.required" >
+                    Nombre de place est obligatoire.
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="form-group col-6">
+                  <label for="db" class="col-form-label" >Date Début :</label>
+                  <input id="db" [(ngModel)]="mission.startDate" #db="ngModel" name="startDate"
+                         type="date" class="form-control" placeholder="Date Début" required=""
+                         [ngClass]="{'is-valid': db.touched && !db.errors?.required ,
+                                 'is-invalid': db.touched && db.errors?.required}"
+                  >
+                  <div class="feedback-error" *ngIf="db.touched && db.errors?.required" >
+                    Date Debut est obligatoire.
+                  </div>
+                </div>
+                <div class="form-group col-6">
+                  <label for="df" class="col-form-label" >Date Fin :</label>
+                  <input id="df" [(ngModel)]="mission.endDate" #df="ngModel" name="endDate"
+                         type="date" class="form-control" placeholder="Date Fin" required=""
+                         [ngClass]="{'is-valid': df.touched && !df.errors?.required ,
+                                 'is-invalid': df.touched && df.errors?.required}"
+                  >
+                  <div class="feedback-error" *ngIf="df.touched && df.errors?.required" >
+                    Date Fin est obligatoire.
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="col-form-label" >Détails Mission :</label>
+                <div class="table-responsive-md mx-auto" >
+                  <ckeditor [editor]="Editor"  name="content"   [(ngModel)]="mission.content" class="mx-auto " size="100%"></ckeditor>
+                </div>
+              </div>
+
+              <div class="form-group row ">
+
+                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 ">
+                  <button class="btn btn-space btn-dark"  (click)="submite()"
+
+                  >Modifier</button>
+                  <button class="btn btn-space btn-secondary" (click)="reset()">Annuler</button>
+                </div>
+              </div>
+            </form>
+            </ng-container>
+
+
+            <ng-container *ngSwitchCase="DataStateEnum.ERROR">
+              <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <strong>Erreur!</strong> {{result.errorMessage}}.
+                <a href="#" class="close" data-dismiss="alert" aria-label="Close">
+                  <span aria-hidden="true">×</span>
+                </a>
+              </div>
+            </ng-container>
+
+
+
+
+
+          </ng-container>
+
+
+
+        </div>
+      </div>
+    </div>
+    <!-- ============================================================== -->
+    <!-- end basic table  -->
+    <!-- ============================================================== -->
+  </div>
+
+
+</div>

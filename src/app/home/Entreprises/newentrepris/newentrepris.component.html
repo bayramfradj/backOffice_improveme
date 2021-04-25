@@ -1,0 +1,146 @@
+<div class="container-fluid  dashboard-content">
+
+
+  <!-- ============================================================== -->
+  <!-- pageheader -->
+  <!-- ============================================================== -->
+  <div class="row">
+    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+      <div class="page-header">
+        <h2 class="pageheader-title">ENTREPRISES</h2>
+        <div class="page-breadcrumb">
+          <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item"><a routerLink="/" class="breadcrumb-link">Dashboard</a></li>
+              <li class="breadcrumb-item"><a routerLink="/entreprises" class="breadcrumb-link">Entreprises</a></li>
+              <li class="breadcrumb-item active" aria-current="page">Ajouter</li>
+            </ol>
+          </nav>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- ============================================================== -->
+  <!-- end pageheader -->
+  <!-- ============================================================== -->
+
+  <div class="row">
+    <!-- ============================================================== -->
+    <!-- Form Add  -->
+    <!-- ============================================================== -->
+    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+      <div class="card">
+        <h5 class="card-header">Ajouter Entreprise</h5>
+        <div class="card-body">
+
+          <div class="col-4  offset-4" *ngIf="loader">
+            <img src="assets/images/loading.gif" style="margin-left: 15%">
+          </div>
+
+          <form *ngIf="!loader">
+            <div class="form-group">
+              <label for="entrepriseName" class="col-form-label" >Nom d'Entreprise :</label>
+              <input id="entrepriseName" [(ngModel)]="user.entrepriseName" #eName="ngModel" name="entrepriseName"
+                     type="text" class="form-control" placeholder="Nom d'Entreprise" required=""
+                     [ngClass]="{'is-valid': eName.touched && !eName.errors?.required ,
+                                 'is-invalid': eName.touched && eName.errors?.required}"
+              >
+            <div class="feedback-error" *ngIf="eName.touched && eName.errors?.required" >
+              Nom d'Entreprise est obligatoire.
+            </div>
+            </div>
+            <div class="form-group">
+              <label for="email" class="col-form-label">Email :</label>
+              <input id="email" type="email" class="form-control" placeholder="Email" required=""
+                     [(ngModel)]="user.email" #em="ngModel" name="email"
+                     pattern="[a-zA-Z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,3}$"
+                     [ngClass]="{'is-valid': em.touched && !em.errors?.pattern && !em.errors?.required && !vmail,
+                                 'is-invalid': em.touched && (em.errors?.pattern || em.errors?.required || vmail)}"
+                     (blur)="verifMail()"
+              >
+
+              <div class="feedback-error" *ngIf="(em.touched || em.dirty) && em.errors?.required">
+                Email est obligatoire.
+              </div>
+
+              <div class="feedback-error" *ngIf="(em.touched || em.dirty) && em.errors?.pattern">
+                Veuillez respecter le format de l'email (exemple@domaine.com).
+              </div>
+
+              <div class="feedback-error" *ngIf="(em.touched || em.dirty) && vmail">
+                Email existe deja.
+              </div>
+
+            </div>
+
+            <div class="form-group">
+              <label for="username" class="col-form-label">Username :</label>
+              <input id="username" type="text" class="form-control" [(ngModel)]="user.username"
+                     name="username" placeholder="Username" #us="ngModel" required=""
+                     [ngClass]="{'is-valid': us.touched && !us.errors?.required && !vusername,
+                                 'is-invalid': us.touched && (us.errors?.required || vusername)}"
+                     (blur)="verifUsername()"
+              >
+              <div class="feedback-error" *ngIf="(us.touched || us.dirty) && us.errors?.required">
+                Username est obligatoire.
+              </div>
+              <div class="feedback-error" *ngIf="(em.touched ) && vusername">
+                Username existe deja.
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="password" class="col-form-label">Mot de passe :</label>
+              <input id="password" [(ngModel)]="user.password" name="password" type="password"
+                     class="form-control" placeholder="Mot de passe" #ps="ngModel" required=""
+                     [ngClass]="{'is-valid': ps.touched && !ps.errors?.required ,
+                                 'is-invalid': ps.touched && ps.errors?.required}"
+              >
+              <div class="feedback-error" *ngIf="(ps.touched || ps.dirty) && ps.errors?.required">
+                Mot de passe est obligatoire.
+              </div>
+            </div>
+
+            <div class="form-group" [hidden]="!(ps.valid && ps.touched)">
+              <label for="inputText7" class="col-form-label">Confirmer mot de passe :</label>
+              <input id="inputText7"  type="password" [(ngModel)]="repeatPasword" class="form-control"
+                     placeholder="Confirmer Mot de passe"  name="repeatPasword" #cp="ngModel" required=""
+                     [ngClass]="{'is-valid': cp.touched && !cp.errors?.required && cp.value === ps.value ,
+                                 'is-invalid': cp.touched && (cp.errors?.required || cp.value !== ps.value)}"
+              >
+
+              <div class="feedback-error" *ngIf="cp.touched && cp.errors?.required">
+                Confirmer le mot de passe SVP !
+              </div>
+              <div class="feedback-error" *ngIf="cp.touched && cp.value !== ps.value && cp.value.length > 0">
+                Verifier le mot de passe SVP !
+              </div>
+            </div>
+
+            <div class="form-group row ">
+
+              <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 ">
+                <button class="btn btn-space btn-primary"  (click)="submite()"
+                  [disabled]="eName.errors?.required || em.errors?.pattern || us.errors?.required
+                  || ps.errors?.required  || cp.errors?.required  || ps.value !== cp.value
+                   || vmail || vusername"
+                >Envoyer</button>
+                <button class="btn btn-space btn-secondary" type="reset">Annuler</button>
+              </div>
+            </div>
+
+
+
+
+          </form>
+
+        </div>
+      </div>
+    </div>
+    <!-- ============================================================== -->
+    <!-- end form add  -->
+    <!-- ============================================================== -->
+  </div>
+
+
+</div>
