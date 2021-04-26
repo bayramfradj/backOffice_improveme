@@ -41,20 +41,36 @@
             </div>
           </li>
 
-          <li class="nav-item" *ngIf="role === 'ADMIN' || role === 'ENTREPRISE'  ">
-            <a [ngClass]="{'active' : nc.isActive || ac.isActive || mi.isActive}" aria-controls="submenu-3" aria-expanded="false"
+          <li class="nav-item" *ngIf="role === 'ADMIN'   ">
+            <a [ngClass]="{'active' : aam.isActive || aamp.isActive || aami.isActive}" aria-controls="submenu-3" aria-expanded="false"
                class="nav-link " data-target="#submenu-3" data-toggle="collapse"><i class="fas fa-f fa-folder"></i>Missions</a>
-            <div id="submenu-3" class="collapse submenu" style="" [ngClass]="{'show' : nc.isActive || ac.isActive || mi.isActive}">
+            <div id="submenu-3" class="collapse submenu" style="" [ngClass]="{'show' : aam.isActive || aamp.isActive || aami.isActive}">
               <ul class="nav flex-column" >
                 <li class="nav-item">
-                  <a class="nav-link" routerLink="/mission/Ajouter" routerLinkActive="active" #nc="routerLinkActive" >Ajouter Mission</a>
+                  <a class="nav-link" routerLink="/mission/Ajouter" routerLinkActive="active" #aam="routerLinkActive" >Ajouter Mission</a>
                 </li>
                 <li class="nav-item" >
-                  <a class="nav-link" routerLink="/mission/Publier" routerLinkActive="active" #ac="routerLinkActive" [routerLinkActiveOptions]="{exact: true}">Tous les Missions Publié</a>
+                  <a class="nav-link" routerLink="/mission/Publier" routerLinkActive="active" #aamp="routerLinkActive" [routerLinkActiveOptions]="{exact: true}">Tous les Missions Publié</a>
                 </li>
                 <li class="nav-item" >
-                  <a class="nav-link" routerLink="/mission/Invitation" routerLinkActive="active" #mi="routerLinkActive" [routerLinkActiveOptions]="{exact: true}">Tous les Demende d'ajout Mission</a>
+                  <a class="nav-link" routerLink="/mission/Invitation" routerLinkActive="active" #aami="routerLinkActive" [routerLinkActiveOptions]="{exact: true}">Tous les Demende d'ajout Mission</a>
                 </li>
+              </ul>
+            </div>
+          </li>
+
+          <li class="nav-item" *ngIf="role === 'ENTREPRISE'   ">
+            <a [ngClass]="{'active' : aam.isActive || aamp.isActive }" aria-controls="submenu-3" aria-expanded="false"
+               class="nav-link " data-target="#submenu-3" data-toggle="collapse"><i class="fas fa-f fa-folder"></i>Missions</a>
+            <div id="submenu-3" class="collapse submenu" style="" [ngClass]="{'show' : aam.isActive || aamp.isActive }">
+              <ul class="nav flex-column" >
+                <li class="nav-item">
+                  <a class="nav-link" routerLink="/mission/Ajouter" routerLinkActive="active" #aam="routerLinkActive" >Ajouter Mission</a>
+                </li>
+                <li class="nav-item" >
+                  <a class="nav-link" routerLink="/mission/Entreprise" routerLinkActive="active" #aamp="routerLinkActive" [routerLinkActiveOptions]="{exact: true}">Mes Missions</a>
+                </li>
+
               </ul>
             </div>
           </li>

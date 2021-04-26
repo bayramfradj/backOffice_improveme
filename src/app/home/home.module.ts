@@ -20,6 +20,7 @@ import {CKEditorModule} from '@ckeditor/ckeditor5-angular';
 import { AllAcceptedComponent } from './Mission/all-accepted/all-accepted.component';
 import { AllInvitationComponent } from './Mission/all-invitation/all-invitation.component';
 import { EditMissionComponent } from './Mission/edit-mission/edit-mission.component';
+import { AllByEntrepriseComponent } from './Mission/all-by-entreprise/all-by-entreprise.component';
 
 
 @NgModule({
@@ -39,7 +40,8 @@ import { EditMissionComponent } from './Mission/edit-mission/edit-mission.compon
     NewMissionComponent,
     AllAcceptedComponent,
     AllInvitationComponent,
-    EditMissionComponent
+    EditMissionComponent,
+    AllByEntrepriseComponent
   ],
   imports: [
     CommonModule,
