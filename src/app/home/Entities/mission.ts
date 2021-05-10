@@ -16,5 +16,6 @@ export class Mission {
   content?: string;
   price?: number;
   nbrplace?: number;
+  img?: string | ArrayBuffer | null;
 
 }

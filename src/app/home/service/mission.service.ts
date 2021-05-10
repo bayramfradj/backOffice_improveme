@@ -31,6 +31,11 @@ export class MissionService {
     return this.http.get<Mission[]>(`${environment.baseUrl}:8083/missions/Accepted/`);
   }
 
+  public AllPrototype(): Observable<Mission[]>
+  {
+    return this.http.get<Mission[]>(`${environment.baseUrl}:8083/missions/Prototype/`);
+  }
+
   public AllByEntrepriseId(id: string): Observable<Mission[]>
   {
     return this.http.get<Mission[]>(`${environment.baseUrl}:8083/missions/Entreprise/${id}`);

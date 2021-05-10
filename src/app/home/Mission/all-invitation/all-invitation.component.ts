@@ -7,6 +7,7 @@ import {catchError, map, startWith} from 'rxjs/operators';
 import {StateMission} from '../../Entities/state-mission.enum';
 import {UsersService} from '../../service/users.service';
 import {User} from '../../Entities/User';
+import {ToastrService} from 'ngx-toastr';
 
 @Component({
   selector: 'app-all-invitation',
@@ -19,7 +20,8 @@ export class AllInvitationComponent implements OnInit {
   selectedMission = new Mission();
   coaches: User[] = [];
 
-  constructor(private msService: MissionService, private usService: UsersService) { }
+  constructor(private msService: MissionService, private usService: UsersService,
+              private toastr: ToastrService) { }
 
   ngOnInit(): void {
     this.loadMission();
@@ -54,8 +56,11 @@ export class AllInvitationComponent implements OnInit {
   {
     this.msService.upMission(this.selectedMission).subscribe(mission => {
       console.log(mission);
+      this.toastr.success( `Mission acceptée avec succès` , 'SUCCÈS' );
+      this.loadMission();
+
     }, error => {
-      console.log(error);
+      this.toastr.error('Réessayer Ultérieurement', 'ERREUR');
     });
   }
 
@@ -69,8 +74,11 @@ export class AllInvitationComponent implements OnInit {
     this.selectedMission.stateMission = StateMission.REJECTED;
     this.msService.upMission(this.selectedMission).subscribe(mission => {
       console.log(mission);
+      this.toastr.success( `Mission rejetée avec succès` , 'SUCCÈS' );
+      this.loadMission();
+
     }, error => {
-      console.log(error);
+      this.toastr.error('Réessayer Ultérieurement', 'ERREUR');
     });
   }
 

@@ -6,6 +6,7 @@ import {MissionService} from '../../service/mission.service';
 import {catchError, map, startWith} from 'rxjs/operators';
 import {StateMission} from '../../Entities/state-mission.enum';
 import {ToastrService} from 'ngx-toastr';
+import {TypeMission} from '../../Entities/type-mission.enum';
 
 @Component({
   selector: 'app-all-accepted',
@@ -26,7 +27,7 @@ export class AllAcceptedComponent implements OnInit {
   loadMission(): void
   {
     this.missions$ = this.msService.AllAccepted().pipe(
-      map(value => ({dataState: DataStateEnum.LOADED , data: value})),
+      map(value => ({dataState: DataStateEnum.LOADED , data: this.clean(value)})),
       startWith({dataState: DataStateEnum.LOADING}),
       catchError(err => of( { dataState: DataStateEnum.ERROR , errorMessage: err.message }))
     );
@@ -41,11 +42,15 @@ export class AllAcceptedComponent implements OnInit {
     this.msService.upMission(this.mission).subscribe(
       mission => {
         this.loadMission();
-        this.toastr.success( ' Mission archivé avec succès' , 'SUCCÈS' );
+        this.toastr.success( ' Mission archivée avec succès' , 'SUCCÈS' );
       }, error => {
         this.toastr.error('Réessayer Ultérieurement', 'ERREUR');
         console.log(error.message);
       }
     );
+  }
+
+  clean(data: Mission[]): Mission[] {
+    return data.filter(value => value.typeMission !== TypeMission.PROTOTYPE);
   }
 }

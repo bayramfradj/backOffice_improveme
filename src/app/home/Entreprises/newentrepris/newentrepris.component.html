@@ -120,12 +120,12 @@
             <div class="form-group row ">
 
               <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 ">
-                <button class="btn btn-space btn-primary"  (click)="submite()"
+                <button class="btn btn-space btn-dark"  (click)="submite()"
                   [disabled]="eName.errors?.required || em.errors?.pattern || us.errors?.required
                   || ps.errors?.required  || cp.errors?.required  || ps.value !== cp.value
                    || vmail || vusername"
                 >Envoyer</button>
-                <button class="btn btn-space btn-secondary" type="reset">Annuler</button>
+                <button class="btn btn-space btn-default" type="reset">Annuler</button>
               </div>
             </div>
 

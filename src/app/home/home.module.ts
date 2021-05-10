@@ -21,6 +21,7 @@ import { AllAcceptedComponent } from './Mission/all-accepted/all-accepted.compon
 import { AllInvitationComponent } from './Mission/all-invitation/all-invitation.component';
 import { EditMissionComponent } from './Mission/edit-mission/edit-mission.component';
 import { AllByEntrepriseComponent } from './Mission/all-by-entreprise/all-by-entreprise.component';
+import { AllPrototypeComponent } from './Mission/all-prototype/all-prototype.component';
 
 
 @NgModule({
@@ -41,7 +42,8 @@ import { AllByEntrepriseComponent } from './Mission/all-by-entreprise/all-by-ent
     AllAcceptedComponent,
     AllInvitationComponent,
     EditMissionComponent,
-    AllByEntrepriseComponent
+    AllByEntrepriseComponent,
+    AllPrototypeComponent
   ],
   imports: [
     CommonModule,

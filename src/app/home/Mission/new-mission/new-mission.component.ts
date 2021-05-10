@@ -8,6 +8,7 @@ import {MissionService} from '../../service/mission.service';
 import {StateMission} from '../../Entities/state-mission.enum';
 import {ToastrService} from 'ngx-toastr';
 import {User} from '../../Entities/User';
+import {AngularFireStorage} from '@angular/fire/storage';
 
 @Component({
   selector: 'app-new-mission',
@@ -23,16 +24,18 @@ export class NewMissionComponent implements OnInit {
   type: any;
   public Editor = ClassicEditor;
   coaches: User[] = [];
+  file: any ;
 
   constructor(private auth: AuthService, private usService: UsersService,
-              private mservice: MissionService, private toastr: ToastrService) { }
+              private mservice: MissionService, private toastr: ToastrService,
+              private af: AngularFireStorage ) { }
 
   ngOnInit(): void {
     if (this.auth.getRoles().indexOf('ADMIN') > -1) {
       this.role = 'ADMIN';
       this.type = [
         {v: TypeMission.FORMATION, label: 'FORMATION'},
-        {v: TypeMission.PAYEE, label: 'PAYEE'},
+        {v: TypeMission.PAYANTE, label: 'PAYANTE'},
         {v: TypeMission.RECRUTEMENT, label: 'RECRUTEMENT'},
         {v: TypeMission.PROTOTYPE, label: 'PROTOTYPE'},
       ];
@@ -44,7 +47,7 @@ export class NewMissionComponent implements OnInit {
     }else if (this.auth.getRoles().indexOf('ENTREPRISE') > -1){
       this.role = 'ENTREPRISE';
       this.type = [
-        {v: TypeMission.PAYEE, label: 'PAYEE'},
+        {v: TypeMission.PAYANTE, label: 'PAYANTE'},
         {v: TypeMission.RECRUTEMENT, label: 'RECRUTEMENT'}
       ];
       this.auth.getUserProfile().then(value => {
@@ -68,6 +71,19 @@ export class NewMissionComponent implements OnInit {
 
   submite(): void {
     this.loader = true;
+
+    if (this.file)
+    {
+      this.UploadImage();
+    }
+    else {
+      this.createMission();
+    }
+
+  }
+
+  createMission(): void
+  {
     if (this.role === 'ADMIN')
     {
       this.mission.stateMission = StateMission.ACCEPTED;
@@ -79,10 +95,34 @@ export class NewMissionComponent implements OnInit {
     this.mservice.addMission(this.mission).subscribe(data => {
       this.loader = false;
       this.mission = new Mission();
-      this.toastr.success('Mission ajouté avec succès' , 'SUCCÈS' );
+      this.toastr.success('Mission ajoutée avec succès' , 'SUCCÈS' );
       console.log(data);
     }, error => {
-        this.toastr.error('Réessayer Ultérieurement', 'ERREUR');
+      this.toastr.error('Réessayer Ultérieurement', 'ERREUR');
+    });
+  }
+
+  loadImage($event: any): void
+  {
+    this.file = $event.target.files[0];
+    const reader = new FileReader();
+    reader.readAsDataURL(this.file);
+    // tslint:disable-next-line:variable-name
+    reader.onload = (_event) => {
+      this.mission.img = reader.result;
+    };
+  }
+
+  UploadImage(): void
+  {
+    const randomId = Math.random().toString(36).substring(2);
+    const ref = this.af.ref(randomId);
+    const task = ref.put(this.file);
+    task.then(a => {
+      a.ref.getDownloadURL().then(value => {
+        this.mission.img = value;
+        this.createMission();
       });
+    });
   }
 }

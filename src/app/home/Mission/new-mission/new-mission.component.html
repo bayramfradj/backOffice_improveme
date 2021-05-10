@@ -37,9 +37,15 @@
             <img src="assets/images/loading.gif" style="margin-left: 15%">
           </div>
 
+
+
           <form *ngIf="!loader">
+
+
+
+
             <div class="form-group">
-              <label for="Titre" class="col-form-label" >Titre de Mission :</label>
+              <label for="Titre" class="col-form-label" >Titre de Mission :<span class="text-danger">*</span></label>
               <input id="Titre" [(ngModel)]="mission.title" #title="ngModel" name="title"
                      type="text" class="form-control" placeholder="Titre" required=""
                      [ngClass]="{'is-valid': title.touched && !title.errors?.required ,
@@ -51,7 +57,7 @@
             </div>
 
             <div class="form-group">
-              <label for="desc" class="col-form-label" >Description :</label>
+              <label for="desc" class="col-form-label" >Description : <span class="text-danger">*</span></label>
               <textarea id="desc" class="form-control" [(ngModel)]="mission.description"
                         rows="3" required #desc="ngModel" placeholder="Description" name="description"
                         [ngClass]="{'is-valid': desc.touched && desc.value ,
@@ -63,7 +69,7 @@
             </div>
 
             <div class="form-group">
-              <label for="type" class="col-form-label" >Type :</label>
+              <label for="type" class="col-form-label" >Type : <span class="text-danger">*</span></label>
               <select [(ngModel)]="mission.typeMission" id="type" name="typeMission"
                       #typee="ngModel" class="form-control" required=""
                       [ngClass]="{'is-valid': typee.touched && typee.value != null ,
@@ -77,8 +83,42 @@
               </div>
             </div>
 
+            <div class="form-group" *ngIf="typee.value != TypeMission.PROTOTYPE">
+              <div class="row">
+                <div class="col-lg-4 ">
+                  <label class="be-checkbox custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" #eimg><span class="custom-control-label">Image</span>
+                  </label>
+                </div>
+                <div class="col-lg-8">
+                  <p class="text-left">
+                    <label class="btn btn-outline-light btn-sm col-lg-4" *ngIf="eimg.checked" for="img"> <i class="fas fa-camera"> </i> Ajouter Image</label>
+                    <input type="file" accept="image/*" style="display: none;" id="img" (change)="loadImage($event)">
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12 offset-lg-3 offset-md-3 " *ngIf="file != null">
+                <!-- .card -->
+                <div class="card card-figure">
+                  <!-- .card-figure -->
+                  <figure class="figure">
+                    <!-- .figure-img -->
+                    <div class="figure-attachment">
+                      <img src="{{mission.img}}"  alt="Card image cap" class="img-fluid"> </div>
+                    <!-- /.figure-img -->
+
+                  </figure>
+                  <!-- /.card-figure -->
+                </div>
+                <!-- /.card -->
+              </div>
+            </div>
+
             <div class="form-group" *ngIf="role === 'ADMIN' && typee.value != TypeMission.PROTOTYPE">
-              <label for="coach" class="col-form-label" >Coach :</label>
+              <label for="coach" class="col-form-label" >Coach : <span class="text-danger">*</span></label>
               <select  id="coach" name="coachId"
                        class="form-control" required="" #coa
                        (change)="onCahngeCoach(coa.selectedIndex)"
@@ -92,7 +132,7 @@
 
             <div class="row" *ngIf="typee.value == TypeMission.FORMATION">
               <div class="form-group col-6">
-                <label for="price" class="col-form-label" >Prix :</label>
+                <label for="price" class="col-form-label" >Prix : <span class="text-danger">*</span></label>
                 <input id="price" [(ngModel)]="mission.price" #price="ngModel" name="price"
                        type="number" class="form-control" placeholder="Prix" required=""
                        [ngClass]="{'is-valid': price.touched && !price.errors?.required ,
@@ -103,7 +143,7 @@
                 </div>
               </div>
               <div class="form-group col-6">
-                <label for="place" class="col-form-label" >Nombre de place :</label>
+                <label for="place" class="col-form-label" >Nombre de place : <span class="text-danger">*</span></label>
                 <input id="place" [(ngModel)]="mission.nbrplace" #nbrplace="ngModel" name="nbrplace"
                        type="number" class="form-control" placeholder="Nombre de place" required=""
                        [ngClass]="{'is-valid': nbrplace.touched && !nbrplace.errors?.required ,
@@ -115,9 +155,9 @@
               </div>
             </div>
 
-            <div class="row">
+            <div class="row" *ngIf="typee.value != TypeMission.PROTOTYPE">
               <div class="form-group col-6">
-                <label for="db" class="col-form-label" >Date Début :</label>
+                <label for="db" class="col-form-label" >Date Début : <span class="text-danger">*</span></label>
                 <input id="db" [(ngModel)]="mission.startDate" #db="ngModel" name="startDate"
                        type="date" class="form-control" placeholder="Date Début" required=""
                        [ngClass]="{'is-valid': db.touched && !db.errors?.required ,
@@ -128,7 +168,7 @@
                 </div>
               </div>
               <div class="form-group col-6">
-                <label for="df" class="col-form-label" >Date Fin :</label>
+                <label for="df" class="col-form-label" >Date Fin : <span class="text-danger">*</span></label>
                 <input id="df" [(ngModel)]="mission.endDate" #df="ngModel" name="endDate"
                        type="date" class="form-control" placeholder="Date Fin" required=""
                        [ngClass]="{'is-valid': df.touched && !df.errors?.required ,
@@ -141,7 +181,7 @@
             </div>
 
             <div class="form-group">
-              <label class="col-form-label" >Détails Mission :</label>
+              <label class="col-form-label" >Détails Mission : <span class="text-danger">*</span></label>
               <div class="table-responsive-md mx-auto" >
               <ckeditor [editor]="Editor"  name="content"   [(ngModel)]="mission.content" class="mx-auto " size="100%"></ckeditor>
               </div>
@@ -153,9 +193,9 @@
             <div class="form-group row ">
 
               <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 ">
-                <button class="btn btn-space btn-primary"  (click)="submite()"
+                <button class="btn btn-space btn-dark"  (click)="submite()"
                 >Envoyer</button>
-                <button class="btn btn-space btn-secondary" type="reset">Annuler</button>
+                <button class="btn btn-space btn-default" type="reset">Annuler</button>
               </div>
             </div>
 

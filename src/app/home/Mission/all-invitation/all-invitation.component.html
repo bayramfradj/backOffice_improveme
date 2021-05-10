@@ -12,7 +12,7 @@
           <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
               <li class="breadcrumb-item"><a routerLink="/" class="breadcrumb-link">Dashboard</a></li>
-              <li class="breadcrumb-item active" aria-current="page">Demende D'ajout Mission</li>
+              <li class="breadcrumb-item active" aria-current="page">Demande D'ajout Mission</li>
             </ol>
           </nav>
         </div>
@@ -29,7 +29,7 @@
     <!-- ============================================================== -->
     <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
       <div class="card">
-        <h5 class="card-header">Toutes Les Demendes</h5>
+        <h5 class="card-header">Toutes Les Demandes</h5>
         <div class="card-body">
           <div class="table-responsive">
 
@@ -49,7 +49,7 @@
                     <th>Titre</th>
                     <th>Description</th>
                     <th>Type</th>
-                    <th>Publier par </th>
+                    <th>Publiée par </th>
                     <th>Date Début</th>
                     <th>Date Fin</th>
                     <th>Action</th>
@@ -81,7 +81,7 @@
                     <th>Titre</th>
                     <th>Description</th>
                     <th>Type</th>
-                    <th>Publier par </th>
+                    <th>Publiée par </th>
                     <th>Date Début</th>
                     <th>Date Fin</th>
                     <th>Action</th>
@@ -113,7 +113,7 @@
                         </div>
                       </div>
                       <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" (click)="Rejecter()" data-dismiss="modal">Rejecter</button>
+                        <button type="button" class="btn btn-secondary"  data-toggle="modal"  data-target="#rej"  data-dismiss="modal">Rejecter</button>
                         <button type="button" (click)="approver()" data-dismiss="modal" data-toggle="modal"  data-target="#coach" class="btn btn-primary">Publier</button>
                       </div>
                     </div>
@@ -132,7 +132,7 @@
                       </div>
                       <div class="modal-body">
                         <div class="form-group">
-                          <label for="coachsl" class="col-form-label" >Affecter coach dans cette mission:</label>
+                          <label for="coachsl" class="col-form-label" >Affecter coach à cette mission:</label>
                           <select  id="coachsl"
                                    class="form-control" required="" #coa
                                    (change)="onCahngeCoach(coa.selectedIndex)"
@@ -145,6 +145,27 @@
                       </div>
                       <div class="modal-footer">
                         <button type="button" (click)="update()" data-dismiss="modal" class="btn btn-primary">Enregistrer</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Modal confirmation rejeter mission -->
+                <div class="modal fade"  id="rej" tabindex="-1" role="dialog" aria-labelledby="Label" aria-hidden="true">
+                  <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="Label"><strong>{{selectedMission.title}}</strong></h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div class="modal-body">
+                        <p>vous voulez  vraiment rejtée <strong> {{selectedMission.title }} </strong> ? </p>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
+                        <button type="button" (click)="Rejecter()" data-dismiss="modal" class="btn btn-danger">Rejeter</button>
                       </div>
                     </div>
                   </div>

@@ -50,25 +50,28 @@
                   <a class="nav-link" routerLink="/mission/Ajouter" routerLinkActive="active" #aam="routerLinkActive" >Ajouter Mission</a>
                 </li>
                 <li class="nav-item" >
-                  <a class="nav-link" routerLink="/mission/Publier" routerLinkActive="active" #aamp="routerLinkActive" [routerLinkActiveOptions]="{exact: true}">Tous les Missions Publié</a>
+                  <a class="nav-link" routerLink="/mission/Publier" routerLinkActive="active" #aamp="routerLinkActive" [routerLinkActiveOptions]="{exact: true}">Toutes les missions publiées</a>
                 </li>
                 <li class="nav-item" >
-                  <a class="nav-link" routerLink="/mission/Invitation" routerLinkActive="active" #aami="routerLinkActive" [routerLinkActiveOptions]="{exact: true}">Tous les Demende d'ajout Mission</a>
+                  <a class="nav-link" routerLink="/mission/Invitation" routerLinkActive="active" #aami="routerLinkActive" [routerLinkActiveOptions]="{exact: true}">Toutes les demandes d'ajout mssion</a>
                 </li>
               </ul>
             </div>
           </li>
 
           <li class="nav-item" *ngIf="role === 'ENTREPRISE'   ">
-            <a [ngClass]="{'active' : aam.isActive || aamp.isActive }" aria-controls="submenu-3" aria-expanded="false"
+            <a [ngClass]="{'active' : aam.isActive || aamp.isActive || aampp.isActive }" aria-controls="submenu-3" aria-expanded="false"
                class="nav-link " data-target="#submenu-3" data-toggle="collapse"><i class="fas fa-f fa-folder"></i>Missions</a>
-            <div id="submenu-3" class="collapse submenu" style="" [ngClass]="{'show' : aam.isActive || aamp.isActive }">
+            <div id="submenu-3" class="collapse submenu" style="" [ngClass]="{'show' : aam.isActive || aamp.isActive || aampp.isActive }">
               <ul class="nav flex-column" >
                 <li class="nav-item">
                   <a class="nav-link" routerLink="/mission/Ajouter" routerLinkActive="active" #aam="routerLinkActive" >Ajouter Mission</a>
                 </li>
                 <li class="nav-item" >
                   <a class="nav-link" routerLink="/mission/Entreprise" routerLinkActive="active" #aamp="routerLinkActive" [routerLinkActiveOptions]="{exact: true}">Mes Missions</a>
+                </li>
+                <li class="nav-item" >
+                  <a class="nav-link" routerLink="/mission/Exemple" routerLinkActive="active" #aampp="routerLinkActive" [routerLinkActiveOptions]="{exact: true}">Exemple de Missions</a>
                 </li>
 
               </ul>

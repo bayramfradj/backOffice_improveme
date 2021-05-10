@@ -11,6 +11,10 @@ import {HttpClientModule} from '@angular/common/http';
 import {ToastrModule} from 'ngx-toastr';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {CKEditorModule} from '@ckeditor/ckeditor5-angular';
+import {environment} from '../environments/environment';
+import {AngularFireModule} from '@angular/fire';
+import {AngularFireStorageModule} from '@angular/fire/storage';
+
 
 @NgModule({
   declarations: [
@@ -28,6 +32,8 @@ import {CKEditorModule} from '@ckeditor/ckeditor5-angular';
       progressAnimation: 'decreasing',
       progressBar: true
     }),
+    AngularFireModule.initializeApp(environment.configFrireStore),
+    AngularFireStorageModule,
     CKEditorModule
 
 

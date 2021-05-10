@@ -8,6 +8,7 @@ import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { TypeMission } from '../../Entities/type-mission.enum';
 import {UsersService} from '../../service/users.service';
 import {ToastrService} from 'ngx-toastr';
+import {AngularFireStorage} from '@angular/fire/storage';
 
 @Component({
   selector: 'app-edit-mission',
@@ -25,9 +26,11 @@ export class EditMissionComponent implements OnInit {
   tmission: any;
   public Editor = ClassicEditor;
   coaches: any;
+  file: any ;
+  changedImage = false;
   constructor(private route: ActivatedRoute, private msService: MissionService,
               private auth: AuthService, private usService: UsersService,
-              private toastr: ToastrService) {
+              private toastr: ToastrService, private af: AngularFireStorage) {
     this.missionId = route.snapshot.params.id;
   }
 
@@ -36,7 +39,7 @@ export class EditMissionComponent implements OnInit {
       this.role = 'ADMIN';
       this.type = [
         TypeMission.FORMATION,
-        TypeMission.PAYEE,
+        TypeMission.PAYANTE,
         TypeMission.RECRUTEMENT,
         TypeMission.PROTOTYPE
       ];
@@ -47,7 +50,7 @@ export class EditMissionComponent implements OnInit {
     }else if (this.auth.getRoles().indexOf('ENTREPRISE') > -1){
       this.role = 'ENTREPRISE';
       this.type = [
-        TypeMission.PAYEE,
+        TypeMission.PAYANTE,
         TypeMission.RECRUTEMENT
       ];
     }
@@ -74,14 +77,52 @@ export class EditMissionComponent implements OnInit {
   submite(): void {
     this.appState = {dataState: DataStateEnum.LOADING};
     console.log(this.mission);
+    if (this.changedImage)
+    {
+      this.UploadImage();
+    }
+    else
+    {
+      this.updateMission();
+    }
+
+  }
+
+  updateMission(): void
+  {
     this.msService.upMission(this.mission).subscribe(
       data => {
-        this.toastr.success('Mission modifié avec succès' , 'SUCCÉS' );
+        this.toastr.success('Mission modifiée avec succès' , 'SUCCÉS' );
         this.appState = {dataState: DataStateEnum.LOADED};
       }, error => {
         this.appState = {dataState: DataStateEnum.LOADED};
         this.toastr.error('Réessayer Ultérieurement', 'ERREUR !');
       }
     );
+  }
+
+  loadImage($event: any): void
+  {
+    this.file = $event.target.files[0];
+    const reader = new FileReader();
+    reader.readAsDataURL(this.file);
+    // tslint:disable-next-line:variable-name
+    reader.onload = (_event) => {
+      this.mission.img = reader.result;
+      this.changedImage = true;
+    };
+  }
+
+  UploadImage(): void
+  {
+    const randomId = Math.random().toString(36).substring(2);
+    const ref = this.af.ref(randomId);
+    const task = ref.put(this.file);
+    task.then(a => {
+      a.ref.getDownloadURL().then(value => {
+        this.mission.img = value;
+        this.updateMission();
+      });
+    });
   }
 }
