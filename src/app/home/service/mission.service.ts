@@ -41,6 +41,11 @@ export class MissionService {
     return this.http.get<Mission[]>(`${environment.baseUrl}:8083/missions/Entreprise/${id}`);
   }
 
+  public AllByCoach(id: string): Observable<Mission[]>
+  {
+    return this.http.get<Mission[]>(`${environment.baseUrl}:8083/missions/Accepted/Coach/${id}`);
+  }
+
   public AllInviation(): Observable<Mission[]>
   {
     return this.http.get<Mission[]>(`${environment.baseUrl}:8083/missions/Invitation/`);

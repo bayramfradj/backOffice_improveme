@@ -1,0 +1,321 @@
+<div class="container-fluid  dashboard-content">
+
+
+  <!-- ============================================================== -->
+  <!-- pageheader -->
+  <!-- ============================================================== -->
+  <div class="row">
+    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+      <div class="page-header">
+        <h2 class="pageheader-title">Mes Missions</h2>
+        <div class="page-breadcrumb">
+          <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item"><a routerLink="/" class="breadcrumb-link">Dashboard</a></li>
+              <li class="breadcrumb-item active" aria-current="page">Mes Missions</li>
+            </ol>
+          </nav>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- ============================================================== -->
+  <!-- end pageheader -->
+  <!-- ============================================================== -->
+
+  <div class="row">
+    <!-- ============================================================== -->
+    <!-- basic table  -->
+    <!-- ============================================================== -->
+    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+      <div class="card">
+        <h5 class="card-header">Mes Missions</h5>
+        <div class="card-body">
+          <div class="table-responsive">
+
+            <ng-container *ngIf="missions$ | async as result" [ngSwitch]="result.dataState">
+
+              <ng-container *ngSwitchCase="DataStateEnum.LOADING">
+                <div class="col-4  offset-4" >
+                  <img src="assets/images/loading.gif" style="margin-left: 15%">
+                </div>
+              </ng-container>
+
+              <ng-container *ngSwitchCase="DataStateEnum.LOADED">
+
+                <table class="table row-border hover " datatable >
+                  <thead>
+                  <tr>
+                    <th>Titre</th>
+                    <th>Description</th>
+                    <th>Type</th>
+                    <th>Date Début</th>
+                    <th>Date Fin</th>
+                    <th>Entreprise</th>
+                    <th>Action</th>
+                  </tr>
+                  </thead>
+
+                  <tbody>
+                  <tr *ngFor="let m of result.data">
+
+                    <td>{{m.title}}</td>
+                    <td><p style="max-width: 150px">{{m.description}}</p></td>
+                    <td>{{m.typeMission}}</td>
+                    <td>{{m.startDate | date: 'dd/MM/yyyy'}}</td>
+                    <td>{{m.endDate | date: 'dd/MM/yyyy'}}</td>
+                    <td>
+                      {{m.entrepriseName}}
+                    </td>
+
+                    <td>
+
+                      <button type="button" data-toggle="dropdown" class="btn btn-default dropdown-toggle" aria-expanded="false">Action</button>
+                      <div class="dropdown-menu" x-placement="top-start" style="position: absolute; transform: translate3d(655px, -153px, 0px); top: 0px; left: 0px; will-change: transform;">
+                        <button type="button"  class="dropdown-item" data-toggle="modal"  data-target="#rep" (click)="loadSelectedMission(m)">Afficher</button>
+
+
+
+                      </div>
+
+                    </td>
+
+                  </tr>
+                  </tbody>
+
+                  <tfoot>
+                  <tr>
+                    <th>Titre</th>
+                    <th>Description</th>
+                    <th>Type</th>
+                    <th>Date Début</th>
+                    <th>Date Fin</th>
+                    <th>Entreprise</th>
+                    <th>Action</th>
+                  </tr>
+                  </tfoot>
+                </table>
+
+                <!-- Modal Affihage -->
+                <div class="modal fade "  id="rep" tabindex="-1" role="dialog" aria-labelledby="repLabel" aria-hidden="true">
+                  <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header ">
+                        <h2 class="modal-title ml-lg-auto" id="repLabel">{{selectedMission.title}}</h2>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div class="modal-body" style="max-height: 470px; overflow-x: auto; overflow-y: scroll; overflow-scrolling: auto;">
+
+                        <img src="{{selectedMission.img}}" *ngIf="selectedMission.img" class="img-thumbnail offset-lg-2 col-lg-8" >
+                        <hr>
+                        <h3>Description :</h3>
+                        <h5 class="ml-3">{{selectedMission.description}}</h5>
+                        <p class="ml-3 text-dark"> Mission de type <b>{{selectedMission.typeMission}}, </b>
+                          publié par : <b>{{selectedMission.entrepriseName}}, </b>
+                          du  <b>{{selectedMission.startDate | date: 'd/MM/yyyy'}}</b> à <b>{{selectedMission.endDate | date: 'd/MM/yyyy'}}.</b></p>
+                        <hr>
+                        <h3>Détails Mission : </h3>
+                        <br>
+                        <div class="ml-3 " [innerHTML]="selectedMission.content">
+
+                        </div>
+                      </div>
+                      <div class="modal-footer justify-content-lg-between">
+                        <button type="button"  data-toggle="modal" data-dismiss="modal"  data-target="#candi" class="btn btn-default mr-auto" (click)="LoadCandidatures()" *ngIf="selectedMission.typeMission != TypeMission.FORMATION">Toutes les Candidatures</button>
+                        <button type="button"  data-toggle="modal" data-dismiss="modal" data-target="#coach" class="btn btn-default" *ngIf="selectedMission.typeMission == TypeMission.FORMATION">Toutes les Inscriptions</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- All Candidatures -->
+                <div class="modal fade "  id="candi" tabindex="-1" role="dialog" aria-labelledby="CandiLabel" aria-hidden="true">
+                  <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header ">
+                        <button type="button" class="close ml-lg-0" data-target="#rep" data-toggle="modal" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true"><i class="fas fa-arrow-alt-circle-left"></i></span>
+                        </button>
+                        <h3 class="modal-title ml-lg-auto" id="CandiLabel">Toutes les candidatures pour {{selectedMission.title}}</h3>
+                        <button type="button" class="close" data-target="#rep" data-toggle="modal" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div class="modal-body" style="max-height: 470px; min-height: 300px; overflow-x: auto; overflow-y: scroll; overflow-scrolling: auto;">
+                        <ng-container *ngIf="demandes$ | async as result1" [ngSwitch]="result1.dataState">
+
+                          <ng-container *ngSwitchCase="DataStateEnum.LOADING">
+                            <div class="col-4  offset-4" >
+                              <img src="assets/images/loading.gif" style="margin-left: 15%">
+                            </div>
+                          </ng-container>
+
+                          <ng-container *ngSwitchCase="DataStateEnum.LOADED">
+
+                            <div class="list-group list-group-horizontal-xxl my-auto ">
+                              <div class="list-group-item d-flex w-100 justify-content-lg-between"   *ngFor="let d of result1.data">
+                                <h5 class="ml-lg-0 my-auto">{{d.userName}}</h5>
+                                <button class="btn btn-info btn-sm rounded-2 mr-0" data-target="#Profile" data-toggle="modal" data-dismiss="modal" (click)="loadProfile(d)"><i class="fa fa-eye"></i></button>
+                              </div>
+                            </div>
+
+
+                          </ng-container>
+                          <ng-container *ngSwitchCase="DataStateEnum.ERROR">
+                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                              <strong>Erreur!</strong> {{result1.errorMessage}}.
+                              <a href="#" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">×</span>
+                              </a>
+                            </div>
+                          </ng-container>
+                        </ng-container>
+                      </div>
+                      <div class="modal-footer justify-content-lg-between">
+
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Profile -->
+                <div class="modal fade "  id="Profile" tabindex="-1" role="dialog" aria-labelledby="ProfileLabel" aria-hidden="true">
+                  <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header ">
+                        <button type="button" class="close ml-0" data-target="#candi" data-toggle="modal" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true"><i class="fas fa-arrow-alt-circle-left"></i></span>
+                        </button>
+                        <h3 class="modal-title ml-lg-auto" id="ProfileLabel">PROFIL</h3>
+                        <button type="button" class="close" data-target="#candi" data-toggle="modal" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div class="modal-body" style="max-height: 470px; min-height: 300px; overflow-x: auto; overflow-y: scroll; overflow-scrolling: auto;">
+                        <ng-container *ngIf="profile$ | async as result2" [ngSwitch]="result2.dataState">
+
+                          <ng-container *ngSwitchCase="DataStateEnum.LOADING">
+                            <div class="col-4  offset-4" >
+                              <img src="assets/images/loading.gif" style="margin-left: 15%">
+                            </div>
+                          </ng-container>
+
+                          <ng-container *ngSwitchCase="DataStateEnum.LOADED">
+                            <div class=" align-content-lg-center" *ngIf="result2.data">
+                              <img src="{{result2.data.img}}" class="rounded-circle img-fluid col-lg-4 offset-lg-4 col-md-4 offset-md-4 " alt="">
+
+                              <h2 class="mt-lg-1 text-center text-dark">{{result2.data.name}}</h2>
+                              <h3 class="text-center text-gray">{{result2.data.title}}</h3>
+
+                              <h3 class="text-dark mb-lg-3">Infos </h3>
+                              <p class="ml-lg-3">{{result2.data.bio}}</p>
+                              <hr>
+                              <h3 class="text-dark mb-lg-3">Expérience </h3>
+                              <div class="row" *ngFor="let e of result2.data.experiences">
+                                <div class="col-lg-2 col-md-2 col-2 mt-lg-3">
+                                 <center><img src="assets/images/work.png" class="rounded " width="70px" alt="{{e.etablissement}}"> </center>
+                                </div>
+                                <div class="col-lg-10 col-md-10 col-10">
+                                  <h3 class="text-dark mb-0">{{e.poste}}</h3>
+                                  <h6 class="text-dark mt-0 mb-0">{{e.etablissement}}</h6>
+                                  <small class="text-muted mt-0 mb-0">{{e.startDate | date: 'MM/YYYY'}} - {{e.endDate | date: 'MM/YYYY'}}</small>
+                                  <p class="text-dark mt-2 mr-lg-4">
+                                    {{e.description}}
+                                  </p>
+                                  <hr >
+                                </div>
+                              </div>
+
+                              <div class="row" *ngFor="let e of result2.data.experiences">
+                                <div class="col-lg-2 col-md-2 col-2 mt-lg-3">
+                                  <center><img src="assets/images/work.png" class="rounded " width="70px" alt="{{e.etablissement}}"> </center>
+                                </div>
+                                <div class="col-lg-10 col-md-10 col-10">
+                                  <h3 class="text-dark mb-0">{{e.poste}}</h3>
+                                  <h6 class="text-dark mt-0 mb-0">{{e.etablissement}}</h6>
+                                  <small class="text-muted mt-0 mb-0">{{e.startDate | date: 'MM/YYYY'}} - {{e.endDate | date: 'MM/YYYY'}}</small>
+                                  <p class="text-dark mt-2 mr-lg-4">
+                                    {{e.description}}
+                                  </p>
+                                  <hr >
+                                </div>
+                              </div>
+
+                              <hr>
+                              <h3 class="text-dark mb-lg-3">Compétences </h3>
+                              <div class="row  ml-lg-2">
+                                <div class="col-lg-6 mt-lg-2 " *ngFor="let s of result2.data.skills">
+                                  <h5 class="text-dark font-bold">{{s.name?.toUpperCase()}}</h5>
+                                </div>
+                              </div>
+
+
+
+                            </div>
+
+                          </ng-container>
+                          <ng-container *ngSwitchCase="DataStateEnum.ERROR">
+                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                              <strong>Erreur!</strong> {{result2.errorMessage}}.
+                              <a href="#" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">×</span>
+                              </a>
+                            </div>
+                          </ng-container>
+                        </ng-container>
+                      </div>
+                      <div class="modal-footer justify-content-lg-center ">
+                        <button class="btn btn-rounded btn-space btn-success btn-sm"
+                                data-target="#candi" data-toggle="modal" data-dismiss="modal"
+                                (click)="Accepter()"
+                        >
+                          <span> <i class="fas fa-check-circle"></i> Accepter</span>
+                        </button>
+                        <button class="btn btn-rounded btn-space btn-danger btn-sm"
+                                data-target="#candi" data-toggle="modal" data-dismiss="modal"
+                                (click)="Refuser()"
+                        >
+                          <span> <i class="fas fa-times-circle"></i> Refuser</span>
+                        </button>
+
+
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+
+
+
+              </ng-container>
+
+
+              <ng-container *ngSwitchCase="DataStateEnum.ERROR">
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                  <strong>Erreur!</strong> {{result.errorMessage}}.
+                  <a href="#" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                  </a>
+                </div>
+              </ng-container>
+
+
+
+
+
+            </ng-container>
+
+
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- ============================================================== -->
+    <!-- end basic table  -->
+    <!-- ============================================================== -->
+  </div>
+
+
+</div>

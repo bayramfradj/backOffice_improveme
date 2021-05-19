@@ -22,6 +22,7 @@ import { AllInvitationComponent } from './Mission/all-invitation/all-invitation.
 import { EditMissionComponent } from './Mission/edit-mission/edit-mission.component';
 import { AllByEntrepriseComponent } from './Mission/all-by-entreprise/all-by-entreprise.component';
 import { AllPrototypeComponent } from './Mission/all-prototype/all-prototype.component';
+import { AllByCoachComponent } from './Mission/all-by-coach/all-by-coach.component';
 
 
 @NgModule({
@@ -43,7 +44,8 @@ import { AllPrototypeComponent } from './Mission/all-prototype/all-prototype.com
     AllInvitationComponent,
     EditMissionComponent,
     AllByEntrepriseComponent,
-    AllPrototypeComponent
+    AllPrototypeComponent,
+    AllByCoachComponent
   ],
   imports: [
     CommonModule,

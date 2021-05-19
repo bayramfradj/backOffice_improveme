@@ -78,6 +78,14 @@
             </div>
           </li>
 
+
+
+          <li class="nav-item" *ngIf="role === 'COACH'">
+            <a class="nav-link" routerLink="/mission/Coach" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+              <i class="fas fa-f fa-shopping-bag"> </i> Mes Missions
+            </a>
+          </li>
+
           <li class="nav-item" *ngIf="role === 'ADMIN'">
             <a  class="nav-link" routerLink="/contacts" routerLinkActive="active" >
               <i class="fas fa-f fa-folder"></i>Contacts

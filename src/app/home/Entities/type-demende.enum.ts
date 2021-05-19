@@ -1,0 +1,3 @@
+export enum TypeDemende {
+  INSCRIPTION= 'INSCRIPTION', CANDIDATURE= 'CANDIDATURE'
+}

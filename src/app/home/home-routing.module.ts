@@ -16,6 +16,7 @@ import {AllInvitationComponent} from './Mission/all-invitation/all-invitation.co
 import {EditMissionComponent} from './Mission/edit-mission/edit-mission.component';
 import { AllByEntrepriseComponent } from './Mission/all-by-entreprise/all-by-entreprise.component';
 import {AllPrototypeComponent} from './Mission/all-prototype/all-prototype.component';
+import {AllByCoachComponent} from './Mission/all-by-coach/all-by-coach.component';
 
 const routes: Routes = [
   {
@@ -75,6 +76,10 @@ const routes: Routes = [
       {
         path: 'mission/Exemple' , component: AllPrototypeComponent
         , canActivate: [AuthGuard] , data: {roles: ['ENTREPRISE']}
+      },
+      {
+        path: 'mission/Coach' , component: AllByCoachComponent
+        , canActivate: [AuthGuard] , data: {roles: ['COACH']}
       },
       {
         path: '' , redirectTo: 'dashboard' , pathMatch: 'full'

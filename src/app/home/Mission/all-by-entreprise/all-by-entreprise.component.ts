@@ -14,7 +14,6 @@ import {StateMission} from '../../Entities/state-mission.enum';
 })
 export class AllByEntrepriseComponent implements OnInit {
   missions$: Observable<AppState<Mission[]>> |null = null ;
-  mission = new Mission();
   readonly DataStateEnum = DataStateEnum;
   readonly StateMission = StateMission;
   entrepriseId: string;
