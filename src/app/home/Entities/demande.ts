@@ -11,4 +11,5 @@ export class Demande {
   stateCandidature?: StateCandidature;
   isPayed?: boolean;
   mission?: Mission;
+  affected?: boolean;
 }

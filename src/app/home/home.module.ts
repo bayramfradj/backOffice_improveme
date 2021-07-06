@@ -23,7 +23,19 @@ import { EditMissionComponent } from './Mission/edit-mission/edit-mission.compon
 import { AllByEntrepriseComponent } from './Mission/all-by-entreprise/all-by-entreprise.component';
 import { AllPrototypeComponent } from './Mission/all-prototype/all-prototype.component';
 import { AllByCoachComponent } from './Mission/all-by-coach/all-by-coach.component';
+import { ChatComponent } from './Chat/chat/chat.component';
+import { AllEvaluationComponent } from './Evaluation/all-evaluation/all-evaluation.component';
+import {FullCalendarModule} from '@fullcalendar/angular';
+import dayGridPlugin from '@fullcalendar/daygrid'; // a plugin!
+import timeGridWeek from '@fullcalendar/timegrid';
+import interactionPlugin from '@fullcalendar/interaction'; // a plugin!
 
+
+FullCalendarModule.registerPlugins([ // register FullCalendar plugins
+  dayGridPlugin,
+  timeGridWeek,
+  interactionPlugin
+]);
 
 @NgModule({
   schemas: [NO_ERRORS_SCHEMA],
@@ -45,7 +57,9 @@ import { AllByCoachComponent } from './Mission/all-by-coach/all-by-coach.compone
     EditMissionComponent,
     AllByEntrepriseComponent,
     AllPrototypeComponent,
-    AllByCoachComponent
+    AllByCoachComponent,
+    ChatComponent,
+    AllEvaluationComponent
   ],
   imports: [
     CommonModule,
@@ -53,7 +67,8 @@ import { AllByCoachComponent } from './Mission/all-by-coach/all-by-coach.compone
     DataTablesModule,
     FormsModule,
     ReactiveFormsModule,
-    CKEditorModule
+    CKEditorModule,
+    FullCalendarModule
   ]
 })
 export class HomeModule { }

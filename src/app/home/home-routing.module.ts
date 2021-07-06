@@ -17,6 +17,8 @@ import {EditMissionComponent} from './Mission/edit-mission/edit-mission.componen
 import { AllByEntrepriseComponent } from './Mission/all-by-entreprise/all-by-entreprise.component';
 import {AllPrototypeComponent} from './Mission/all-prototype/all-prototype.component';
 import {AllByCoachComponent} from './Mission/all-by-coach/all-by-coach.component';
+import {ChatComponent} from './Chat/chat/chat.component';
+import {AllEvaluationComponent} from './Evaluation/all-evaluation/all-evaluation.component';
 
 const routes: Routes = [
   {
@@ -79,6 +81,14 @@ const routes: Routes = [
       },
       {
         path: 'mission/Coach' , component: AllByCoachComponent
+        , canActivate: [AuthGuard] , data: {roles: ['COACH']}
+      },
+      {
+        path: 'mission/Chat/:id' , component: ChatComponent
+        , canActivate: [AuthGuard] , data: {roles: ['COACH']}
+      },
+      {
+        path: 'mission/Evaluation/:id' , component: AllEvaluationComponent
         , canActivate: [AuthGuard] , data: {roles: ['COACH']}
       },
       {

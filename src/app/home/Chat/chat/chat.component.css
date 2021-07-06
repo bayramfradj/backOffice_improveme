@@ -1,0 +1,53 @@
+
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+::-webkit-scrollbar-track {
+  width: 5px;
+  background: #f5f5f5;
+}
+
+::-webkit-scrollbar-thumb {
+  width: 1em;
+  background-color: #ddd;
+  outline: 1px solid slategrey;
+  border-radius: 1rem;
+}
+
+.text-small {
+  font-size: 0.9rem;
+}
+
+.messages-box,
+.chat-box {
+  height: 480px;
+  overflow-y: scroll;
+}
+.messages-box div a {
+  cursor: pointer;
+}
+.rounded-lg {
+  border-radius: 0.5rem;
+}
+
+input::placeholder {
+  font-size: 0.9rem;
+  color: #999;
+}
+
+.active-box{
+  background-color: #0e0c28;
+
+}
+.active-box h6 {
+  color: #fffffe;
+  font-weight: bold;
+}
+
+.bg-Sender {
+  background-color: #0e0c28;
+}
+.btn-sender {
+  color: #0e0c28;
+}

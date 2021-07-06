@@ -1,5 +1,6 @@
 import {TypeMission} from './type-mission.enum';
 import {StateMission} from './state-mission.enum';
+import {Demande} from './demande';
 
 export class Mission {
   id?: bigint;
@@ -17,5 +18,6 @@ export class Mission {
   price?: number;
   nbrplace?: number;
   img?: string | ArrayBuffer | null;
+  demandes?: Demande[];
 
 }

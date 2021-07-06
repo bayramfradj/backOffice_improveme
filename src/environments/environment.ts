@@ -16,7 +16,8 @@ export const environment = {
     clientId: 'AdminFront',
     realm: 'improveMe',
     url: 'http://localhost:8080/auth'},
-  baseUrl: 'http://improveme'
+  baseUrl: 'http://improveme',
+  wsServer: 'http://localhost:8085/ws'
 };
 
 /*

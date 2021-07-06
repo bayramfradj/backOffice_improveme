@@ -73,7 +73,11 @@
                       <button type="button" data-toggle="dropdown" class="btn btn-default dropdown-toggle" aria-expanded="false">Action</button>
                       <div class="dropdown-menu" x-placement="top-start" style="position: absolute; transform: translate3d(655px, -153px, 0px); top: 0px; left: 0px; will-change: transform;">
                         <button type="button"  class="dropdown-item" data-toggle="modal"  data-target="#rep" (click)="loadSelectedMission(m)">Afficher</button>
-
+                        <a  [routerLink]="['/mission/Chat/',m.id]"  class="dropdown-item" >Messenger</a>
+                        <button type="button"  data-toggle="modal"  data-target="#candi" class="dropdown-item" (click)="LoadCandidatures(m)" *ngIf="m.typeMission != TypeMission.FORMATION">Toutes les Candidatures</button>
+                        <button type="button"  data-toggle="modal"  data-target="#coach" class="dropdown-item" *ngIf="m.typeMission == TypeMission.FORMATION">Toutes les Inscriptions</button>
+                        <button type="button"  data-toggle="modal"   data-target="#groupes" class="dropdown-item" (click)="loadGroupes(m)" *ngIf="m.typeMission != TypeMission.FORMATION">Gerer les Groupes</button>
+                        <a  [routerLink]="['/mission/Evaluation/',m.id]"  class="dropdown-item" >Gérer les evaluations</a>
 
 
                       </div>
@@ -109,6 +113,11 @@
                       <div class="modal-body" style="max-height: 470px; overflow-x: auto; overflow-y: scroll; overflow-scrolling: auto;">
 
                         <img src="{{selectedMission.img}}" *ngIf="selectedMission.img" class="img-thumbnail offset-lg-2 col-lg-8" >
+                        <ng-container class="image " *ngIf="selectedMission.img == null" [ngSwitch]="selectedMission.typeMission">
+                          <img *ngSwitchCase="TypeMission.RECRUTEMENT" class="img-thumbnail offset-lg-2 col-lg-8" src="assets/images/rec.jpg" style="max-height: 450px; width: available" alt="about">
+                          <img *ngSwitchCase="TypeMission.PAYANTE" class="img-thumbnail offset-lg-2 col-lg-8" src="assets/images/demandés.jpg" alt="about">
+                          <img *ngSwitchCase="TypeMission.FORMATION" class="img-thumbnail offset-lg-2 col-lg-8" src="assets/images/missions.jpg" alt="about">
+                        </ng-container>
                         <hr>
                         <h3>Description :</h3>
                         <h5 class="ml-3">{{selectedMission.description}}</h5>
@@ -122,14 +131,15 @@
 
                         </div>
                       </div>
-                      <div class="modal-footer justify-content-lg-between">
-                        <button type="button"  data-toggle="modal" data-dismiss="modal"  data-target="#candi" class="btn btn-default mr-auto" (click)="LoadCandidatures()" *ngIf="selectedMission.typeMission != TypeMission.FORMATION">Toutes les Candidatures</button>
+                      <div class="modal-footer justify-content-lg-center">
+                        <button type="button"  data-toggle="modal" data-dismiss="modal"  data-target="#candi" class="btn btn-default " (click)="LoadCandidatures()" *ngIf="selectedMission.typeMission != TypeMission.FORMATION">Toutes les Candidatures</button>
                         <button type="button"  data-toggle="modal" data-dismiss="modal" data-target="#coach" class="btn btn-default" *ngIf="selectedMission.typeMission == TypeMission.FORMATION">Toutes les Inscriptions</button>
+                        <button type="button"  data-toggle="modal" data-dismiss="modal"  data-target="#groupes" class="btn btn-default " (click)="loadGroupes()" *ngIf="selectedMission.typeMission != TypeMission.FORMATION">Gerer les Groupes</button>
+
                       </div>
                     </div>
                   </div>
                 </div>
-
                 <!-- All Candidatures -->
                 <div class="modal fade "  id="candi" tabindex="-1" role="dialog" aria-labelledby="CandiLabel" aria-hidden="true">
                   <div class="modal-dialog modal-lg" role="document">
@@ -139,7 +149,7 @@
                           <span aria-hidden="true"><i class="fas fa-arrow-alt-circle-left"></i></span>
                         </button>
                         <h3 class="modal-title ml-lg-auto" id="CandiLabel">Toutes les candidatures pour {{selectedMission.title}}</h3>
-                        <button type="button" class="close" data-target="#rep" data-toggle="modal" data-dismiss="modal" aria-label="Close">
+                        <button type="button" class="close"  data-dismiss="modal" aria-label="Close">
                           <span aria-hidden="true">&times;</span>
                         </button>
                       </div>
@@ -154,9 +164,9 @@
 
                           <ng-container *ngSwitchCase="DataStateEnum.LOADED">
 
-                            <div class="list-group list-group-horizontal-xxl my-auto ">
+                            <div class="list-group list-group-horizontal-xxl my-auto "  >
                               <div class="list-group-item d-flex w-100 justify-content-lg-between"   *ngFor="let d of result1.data">
-                                <h5 class="ml-lg-0 my-auto">{{d.userName}}</h5>
+                                <h5 class="ml-lg-0 my-auto" >{{d.userName}}</h5>
                                 <button class="btn btn-info btn-sm rounded-2 mr-0" data-target="#Profile" data-toggle="modal" data-dismiss="modal" (click)="loadProfile(d)"><i class="fa fa-eye"></i></button>
                               </div>
                             </div>
@@ -173,7 +183,113 @@
                           </ng-container>
                         </ng-container>
                       </div>
-                      <div class="modal-footer justify-content-lg-between">
+                    </div>
+                  </div>
+                </div>
+
+                <!-- manage Groupe -->
+                <div class="modal fade "  id="groupes" tabindex="-1" role="dialog" aria-labelledby="groupesLabel" aria-hidden="true">
+                  <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header ">
+                        <button type="button" class="close ml-lg-0" data-target="#rep" data-toggle="modal" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true"><i class="fas fa-arrow-alt-circle-left"></i></span>
+                        </button>
+                        <h3 class="modal-title ml-lg-auto" id="groupesLabel">Tous les Groupes pour {{selectedMission.title}}</h3>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div class="modal-body" style="max-height: 470px; min-height: 300px; overflow-x: auto; overflow-y: scroll; overflow-scrolling: auto;">
+                        <ng-container *ngIf="groupes$ | async as result2" [ngSwitch]="result2.dataState">
+
+                          <ng-container *ngSwitchCase="DataStateEnum.LOADING">
+                            <div class="col-4  offset-4" >
+                              <img src="assets/images/loading.gif" style="margin-left: 15%">
+                            </div>
+                          </ng-container>
+
+                          <ng-container *ngSwitchCase="DataStateEnum.LOADED">
+
+
+
+                              <div class="form-group mt-lg-4" *ngIf="view === 'ADD'">
+                                <div class="form-group">
+                                  <label for="Titre" class="col-form-label" >Nom de groupe : <span class="text-danger">*</span></label>
+                                  <input id="Titre" name="name"
+                                         type="text" class="form-control" placeholder="Nom de groupe" required=""
+                                         [(ngModel)]="SelectedGroupe.name" #name="ngModel"
+                                         [ngClass]="{'is-valid': name.touched && !name.errors?.required ,
+                                                      'is-invalid': name.touched && name.errors?.required}"
+                                  >
+                                  <div class="feedback-error" *ngIf="name.touched && name.errors?.required" >
+                                    Nom de groupe est obligatoire.
+                                  </div>
+                                </div>
+
+                                <div class="form-group row ">
+
+                                  <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 ">
+                                    <button class="btn btn-space btn-primary"
+                                            (click)="AddGroupe()"
+                                            [disabled]="name.invalid"
+                                    >{{groupeButtonText}}</button>
+                                    <button class="btn btn-space btn-outline-primary" (click)="loadViewGroupes()" >Annuler</button>
+                                  </div>
+                                </div>
+
+                              </div>
+
+
+
+                            <div class="row justify-content-center" *ngIf="view === 'GROUPES'">
+
+                              <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12"  *ngFor="let g of result2.data">
+                                <div class="card text-white" style="background-color: #0e0c28">
+                                  <div class="card-header d-flex "  style="background-color: #0e0c28">
+                                    <h4 class="mb-0 text-white ">{{g.name?.toUpperCase()}}</h4>
+                                    <div class="dropdown ml-auto text-white">
+                                      <a class="toolbar" href="#" role="button" id="dropdownMenuLink{{g.id}}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <small class="text-white"><i class="fas fa-ellipsis-v"></i> </small> </a>
+                                      <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink{{g.id}}">
+                                        <a class="dropdown-item" (click)="loadSelectedGroupe(g,1)"
+                                           data-target="#addMtoG" data-toggle="modal"
+                                           data-dismiss="modal" href="#"
+                                        >Ajouter membres</a>
+                                        <a class="dropdown-item"  (click)="loadUpGroupe(g)">Modifier</a>
+                                        <a class="dropdown-item"  (click)="loadSelectedGroupe(g,0)" data-target="#arch" data-toggle="modal">Archiver</a>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div class="card-body">
+                                    <div class="d-flex" *ngFor="let m of g.membres">
+                                      <p class="card-text my-auto" >{{m.userName}}</p>
+                                      <button class="btn btn-sm btn-space btn-outline-danger  ml-auto "
+                                              (click)="loadSelectedMember(m)"
+                                              data-target="#supm" data-toggle="modal"
+                                      ><small><i class="fas fa-user-times"></i></small></button>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+
+                            </div>
+
+
+
+
+                          </ng-container>
+                          <ng-container *ngSwitchCase="DataStateEnum.ERROR">
+                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                              <strong>Erreur!</strong> {{result2.errorMessage}}.
+                              <a href="#" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">×</span>
+                              </a>
+                            </div>
+                          </ng-container>
+                        </ng-container>
+                      </div>
+                      <div class="modal-footer justify-content-lg-center " *ngIf="view === 'GROUPES'">
+                        <button class="btn btn-outline-dark btn-sm btn-space"  (click)="loadFormAdd()">AJOUTER GROUPE</button>
 
                       </div>
                     </div>
@@ -286,6 +402,124 @@
                   </div>
                 </div>
 
+                <!-- Modal confirmation archivation groupe -->
+                <div class="modal fade"  id="arch" tabindex="-1" role="dialog" aria-labelledby="Label" aria-hidden="true">
+                  <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="Label"><strong>{{SelectedGroupe.name?.toUpperCase()}}</strong></h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div class="modal-body">
+                        <p>vous voulez  vraiment archiver <strong> {{SelectedGroupe.name?.toUpperCase()}}</strong> ? </p>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-danger" data-dismiss="modal">Annuler</button>
+                        <button type="button"  data-dismiss="modal" class="btn btn-danger" (click)="ArchiverGroupe()">Archiver</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Modal confirmation suppression member -->
+                <div class="modal fade"  id="supm" tabindex="-1" role="dialog" aria-labelledby="Label" aria-hidden="true">
+                  <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="Label"><strong>{{selectedMember.userName?.toUpperCase()}}</strong></h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div class="modal-body">
+                        <p>vous voulez  vraiment supprimer <strong> {{selectedMember.userName}}</strong> ? </p>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-danger" data-dismiss="modal">Annuler</button>
+                        <button type="button"  data-dismiss="modal" class="btn btn-danger" (click)="RemoveMember()">Supprimer</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Add Member to groupe -->
+                <div class="modal fade "  id="addMtoG" tabindex="-1" role="dialog" aria-labelledby="mg" aria-hidden="true">
+                  <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header ">
+                        <button type="button" class="close ml-0" data-target="#groupes" data-toggle="modal" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true"><i class="fas fa-arrow-alt-circle-left"></i></span>
+                        </button>
+                        <h3 class="modal-title ml-lg-auto" id="mg">Affecter Membres dans {{SelectedGroupe.name?.toUpperCase()}}</h3>
+                        <button type="button" class="close" data-target="#groupes" data-toggle="modal" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div class="modal-body" >
+
+                        <div class="col-4  offset-4" *ngIf="loadingCan">
+                          <img src="assets/images/loading.gif" style="margin-left: 15%">
+                        </div>
+
+                        <div class="row" *ngIf="!loadingCan">
+                          <!-- card not affected -->
+                          <div class="col-xl-6 col-lg-5 col-md-6 col-sm-6 col-6 ">
+                            <div class="card" style="border-color: #0e0c28">
+                              <div class="card-header" style="background-color: #0e0c28">
+                                <h4 class="mb-0 text-white">Candidatures non affectées</h4>
+                              </div>
+                              <div class="card-body" style="padding:0%; min-height: 250px; max-height: 250px; overflow-x: auto; overflow-y: scroll; overflow-scrolling: auto; ">
+                                <div class="list-group list-group-flush">
+                                  <button type="button" class="list-group-item list-group-item-action"
+                                          *ngFor="let c of candidatures"
+                                  (click)="loadCandidature(c)"
+                                  >
+                                    <strong><i class="fas fa-plus-circle"></i> </strong> {{c.userName}}
+                                  </button>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+
+                          <!-- card group members -->
+                          <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-6 ">
+                            <div class="card text-white" style="background-color: #0e0c28">
+                              <div class="card-header  "  style="background-color: #0e0c28">
+                                <h4 class="mb-0 text-white ">{{SelectedGroupe.name?.toUpperCase()}}</h4>
+
+                              </div>
+                              <div class="card-body" style="min-height: 250px; max-height: 250px; overflow-x: auto; overflow-y: scroll; overflow-scrolling: auto; ">
+                                <div class="d-flex" *ngFor="let m of SelectedGroupe.membres">
+                                  <p class="card-text my-auto" >{{m.userName}}</p>
+                                </div>
+                                <div class="d-flex" *ngFor="let d of Affected">
+                                  <p class="card-text my-auto" >{{d.userName}}</p>
+                                  <button class="btn btn-sm btn-space btn-outline-danger  ml-auto "
+                                          (click)="removeCandidature(d)"
+                                  ><strong><i class="fas fa-minus-circle"></i></strong></button>
+                                </div>
+                              </div>
+                            </div>
+
+
+                          </div>
+
+                        </div>
+
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" data-target="#groupes"
+                                data-toggle="modal" data-dismiss="modal"
+                                class="btn btn-space btn-outline-primary">Annuler</button>
+                        <button type="button" data-target="#groupes"  data-toggle="modal"
+                                data-dismiss="modal" (click)="SaveGroupe()"
+                                class="btn btn-space btn-primary">enregistrer</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
 
 
 
