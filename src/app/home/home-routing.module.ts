@@ -19,6 +19,9 @@ import {AllPrototypeComponent} from './Mission/all-prototype/all-prototype.compo
 import {AllByCoachComponent} from './Mission/all-by-coach/all-by-coach.component';
 import {ChatComponent} from './Chat/chat/chat.component';
 import {AllEvaluationComponent} from './Evaluation/all-evaluation/all-evaluation.component';
+import {AddEvaluationComponent} from './Evaluation/add-evaluation/add-evaluation.component';
+import {ShowEvaluationComponent} from './Evaluation/show-evaluation/show-evaluation.component';
+import {EditEvaluationComponent} from './Evaluation/edit-evaluation/edit-evaluation.component';
 
 const routes: Routes = [
   {
@@ -89,6 +92,18 @@ const routes: Routes = [
       },
       {
         path: 'mission/Evaluation/:id' , component: AllEvaluationComponent
+        , canActivate: [AuthGuard] , data: {roles: ['COACH']}
+      },
+      {
+        path: 'mission/Evaluation/New/:id/:SDate' , component: AddEvaluationComponent
+        , canActivate: [AuthGuard] , data: {roles: ['COACH']}
+      },
+      {
+        path: 'mission/Evaluation/show/:id' , component: ShowEvaluationComponent
+        , canActivate: [AuthGuard] , data: {roles: ['COACH']}
+      },
+      {
+        path: 'mission/Evaluation/Edit/:id' , component: EditEvaluationComponent
         , canActivate: [AuthGuard] , data: {roles: ['COACH']}
       },
       {

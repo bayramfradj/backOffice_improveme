@@ -28,8 +28,10 @@ import { AllEvaluationComponent } from './Evaluation/all-evaluation/all-evaluati
 import {FullCalendarModule} from '@fullcalendar/angular';
 import dayGridPlugin from '@fullcalendar/daygrid'; // a plugin!
 import timeGridWeek from '@fullcalendar/timegrid';
-import interactionPlugin from '@fullcalendar/interaction'; // a plugin!
-
+import interactionPlugin from '@fullcalendar/interaction';
+import { AddEvaluationComponent } from './Evaluation/add-evaluation/add-evaluation.component';
+import { ShowEvaluationComponent } from './Evaluation/show-evaluation/show-evaluation.component';
+import { EditEvaluationComponent } from './Evaluation/edit-evaluation/edit-evaluation.component';
 
 FullCalendarModule.registerPlugins([ // register FullCalendar plugins
   dayGridPlugin,
@@ -59,7 +61,10 @@ FullCalendarModule.registerPlugins([ // register FullCalendar plugins
     AllPrototypeComponent,
     AllByCoachComponent,
     ChatComponent,
-    AllEvaluationComponent
+    AllEvaluationComponent,
+    AddEvaluationComponent,
+    ShowEvaluationComponent,
+    EditEvaluationComponent
   ],
   imports: [
     CommonModule,

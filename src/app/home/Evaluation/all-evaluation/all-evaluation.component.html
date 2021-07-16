@@ -7,12 +7,12 @@
   <div class="row">
     <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
       <div class="page-header">
-        <h2 class="pageheader-title">Evaluation</h2>
+        <h2 class="pageheader-title">Evaluations</h2>
         <div class="page-breadcrumb">
           <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
               <li class="breadcrumb-item"><a routerLink="/mission/Coach" class="breadcrumb-link">Mission</a></li>
-              <li class="breadcrumb-item active" aria-current="page">Evaluation</li>
+              <li class="breadcrumb-item active" aria-current="page">Evaluations</li>
             </ol>
           </nav>
         </div>
@@ -31,7 +31,7 @@
       <div class="card">
         <h5 class="card-header">Les Evaluations pour la mission <strong>"{{(mission$ | async)?.title}}"</strong> </h5>
         <div class="card-body">
-          <full-calendar [options]="calendarOptions" ></full-calendar>
+          <full-calendar [options]="calendarOptions"  ></full-calendar>
 
         </div>
       </div>

@@ -1,0 +1,256 @@
+<div class="container-fluid  dashboard-content">
+
+
+  <!-- ============================================================== -->
+  <!-- pageheader -->
+  <!-- ============================================================== -->
+  <div class="row">
+    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+      <div class="page-header">
+        <h2 class="pageheader-title" *ngIf="evaluation!= null">{{evaluation.title}}</h2>
+        <div class="page-breadcrumb">
+          <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item"><a routerLink="/mission" class="breadcrumb-link">Mission</a></li>
+              <li class="breadcrumb-item"><a [routerLink]="['/mission/Evaluation/',evaluation.missionId]" *ngIf="evaluation" class="breadcrumb-link">Evaluations</a></li>
+              <li class="breadcrumb-item active" aria-current="page" *ngIf="evaluation != null">{{evaluation.title}}</li>
+            </ol>
+          </nav>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- ============================================================== -->
+  <!-- end pageheader -->
+  <!-- ============================================================== -->
+  <div class="row">
+    <!-- ============================================================== -->
+    <!-- Form Add  -->
+    <!-- ============================================================== -->
+    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+      <div class="card">
+        <h5 class="card-header">Evaluation</h5>
+        <div class="card-body">
+
+          <div class="col-4  offset-4" *ngIf="loader">
+            <img src="assets/images/loading.gif" style="margin-left: 15%">
+          </div>
+
+
+          <div  *ngIf="!loader && evaluation != null ">
+            <h1 class="text-center">{{evaluation.title}}</h1>
+            <h5 class="text-left text-justify">Description : </h5>
+            <p class="text-left text-justify ml-lg-2">
+              <strong>{{evaluation.title}}</strong>
+              est une évaluation de la mission
+              <strong *ngIf="mission$">{{mission$.title }}</strong>
+              ,  du type
+              <strong>{{evaluation.type}}</strong>, planifié pour le
+              <strong>{{evaluation.startDate | date: 'dd/MM/YYYY à HH : mm'}}</strong>
+              jusqu'à
+              <strong>{{evaluation.endDate | date: 'dd/MM/YYYY à HH : mm'}}</strong>.
+            </p>
+            <h5 class="text-left text-justify">Detaille de l'évaluation : </h5>
+            <div  class="text-left text-justify"  [innerHTML]="evaluation.decription"></div>
+
+            <hr *ngIf="editable">
+            <button class="btn btn-warning btn-space" (click)="handleClickEdit()" *ngIf="editable">Modifier</button>
+            <button class="btn btn-danger btn-space" data-toggle="modal" data-target="#supp" *ngIf="editable" >Supprimer</button>
+          </div>
+
+          <!-- Modal -->
+          <div class="modal fade" *ngIf="evaluation != null"  id="supp" tabindex="-1" role="dialog" aria-labelledby="Label" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="Label">Suppression Evaluation</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  <p>vous voulez  vraiment supprimer <strong> {{evaluation.title}} </strong>  ? </p>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
+                  <button type="button" (click)="handleClickRemove()" data-dismiss="modal" class="btn btn-danger">Supprimer</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+
+        </div>
+      </div>
+    </div>
+    <!-- ============================================================== -->
+    <!-- end form add  -->
+    <!-- ============================================================== -->
+
+    <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-4" >
+      <!-- ============================================================== -->
+      <!-- Groupes  -->
+      <!-- ============================================================== -->
+      <div class="card">
+        <h5 class="card-header">Les équipes</h5>
+        <div class="card-body p-0">
+          <div class="table-responsive" *ngIf="groupes.length > 0">
+            <table class="table no-wrap p-table">
+              <thead class="bg-light">
+              <tr class="border-0">
+                <th class="border-0">Nom de groupe</th>
+                <th class="border-0">Répondu?</th>
+                <th class="border-0">Traité?</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr *ngFor="let g of groupes" (click)="loadRep(g)">
+                <td>{{g.name}}</td>
+                <td>
+                  <ng-container [ngSwitch]="checkResponse(g.id)">
+                    <span class="badge badge-success" *ngSwitchCase="true" >OUI</span>
+                    <span class="badge badge-danger" *ngSwitchCase="false" >NON</span>
+                  </ng-container>
+
+                </td>
+                <td>
+                  <ng-container *ngIf="checkResponse(g.id)">
+                    <ng-container [ngSwitch]="traite(g.id)">
+                      <span *ngSwitchCase="true"><span class="badge-dot badge-success"  ></span>Traité</span>
+                      <span *ngSwitchCase="false"><span class="badge-dot badge-warning"  ></span>En attante</span>
+                    </ng-container>
+                  </ng-container>
+                </td>
+              </tr>
+
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <!-- ============================================================== -->
+      <!-- end top perfomimg  -->
+      <!-- ============================================================== -->
+    </div>
+
+    <div class="col-xl-8 col-lg-8 col-md-8 col-sm-8 col-8" *ngIf="selectedGroupe">
+      <!-- ============================================================== -->
+      <!-- top perfomimg  -->
+      <!-- ============================================================== -->
+      <div class="card">
+        <h5 class="card-header">Réponse du {{selectedGroupe.name}}</h5>
+        <div class="card-body ">
+          <div class="alert alert-warning mt-lg-3 mb-lg-3" role="alert" *ngIf="!selectedRep">
+            {{selectedGroupe.name}} n'a pas répondu à cette évaluation.
+          </div>
+          <ng-container *ngIf="selectedRep">
+
+            <div class="col-xl-10 col-lg-10 col-md-10 col-sm-12 col-12 offset-lg-1">
+              <!-- .card -->
+              <div class="card card-figure">
+                <!-- .card-figure -->
+                <figure class="figure" *ngIf="evaluation" [ngSwitch]="evaluation.typeRes">
+                  <!-- .figure-img -->
+                  <div class="figure-attachment" *ngSwitchCase="TypeRes.OTHER">
+                    <span class="fa-stack fa-lg">
+                      <i class="fa fa-square fa-stack-2x text-primary"></i>
+                      <i class="fa fa-file fa-stack-1x fa-inverse"></i>
+                    </span>
+                  </div>
+                  <div class="figure-attachment" *ngSwitchCase="TypeRes.IMAGE">
+                    <img src="{{selectedRep.path}}" width="100%">
+                  </div>
+                  <div class="figure-attachment" *ngSwitchCase="TypeRes.VIDEO">
+                    <video src="{{selectedRep.path}}" controls width="100%" height="100%" >
+                      Your browser does not support the video tag.
+                    </video>
+                  </div>
+                  <div class="figure-attachment" *ngSwitchCase="TypeRes.SOUND">
+                    <audio controls src="{{selectedRep.path}}" >
+                      Your browser does not support the
+                      <code>audio</code> element.
+                    </audio>
+
+                  </div>
+                  <!-- /.figure-img -->
+                  <figcaption class="figure-caption">
+                    <ul class="list-inline d-flex text-muted mb-0">
+                      <li class="list-inline-item text-truncate mr-auto">
+                        <span><i class="fas fa-file"></i></span>  envoyé par <b>{{selectedRep.userName}}</b> le
+                        {{selectedRep.submitDate | date: 'dd/MM/YYYY à HH : mm'}} </li>
+                      <li class="list-inline-item">
+                        <a target="_blank" download href="{{selectedRep.path}}">
+                          <i class="fas fa-download "></i></a>
+                      </li>
+                    </ul>
+                  </figcaption>
+                </figure>
+                <!-- /.card-figure -->
+              </div>
+              <!-- /.card -->
+            </div>
+
+            <hr>
+
+            <h5 class="text-left text-justify">Avis de coach</h5>
+            <div class="col-4  offset-4 mt-lg-2" *ngIf="loadAvis">
+              <img src="assets/images/loading.gif" style="margin-left: 15%">
+            </div>
+
+            <ng-container *ngIf="!loadAvis && selectedRep.validated">
+              <label  class="col-form-label">Note : <span class="text-dark"> {{selectedRep.note}} </span></label>
+              <label  class="col-form-label">commentaire : </label>
+              <p class="text-justify text-dark">
+                {{selectedRep.comment}}
+              </p>
+
+            </ng-container>
+
+            <form *ngIf="!selectedRep.validated && !loadAvis">
+              <div class="form-group">
+                <label for="inputText3" class="col-form-label">Note :<span class="text-danger">*</span></label>
+                <input id="inputText3" [(ngModel)]="selectedRep.note" #ln="ngModel" name="note"
+                       type="number" class="form-control"  required="" value=""
+                       [ngClass]="{'is-valid': ln.touched && !ln.errors?.required && ln.value > 0 && ln.value < 21,
+                                 'is-invalid': ln.touched && ln.errors?.required || ln.value < 0 || ln.value > 20}"
+                >
+                <div class="feedback-error" *ngIf="ln.touched && ln.errors?.required" >
+                  Note est obligatoire.
+                </div>
+                <div class="feedback-error" *ngIf="ln.touched && ln.value < 0 || ln.value > 20" >
+                  Note doit être positive et inférieur ou égale à 20
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="desc" class="col-form-label" >commentaire : <span class="text-danger">*</span></label>
+                <textarea id="desc" class="form-control" [(ngModel)]="selectedRep.comment"
+                          rows="3" required #desc="ngModel" placeholder="Écrivez un commentaire…" name="comment"
+                          [ngClass]="{'is-valid': desc.touched && desc.value ,
+                                 'is-invalid': desc.touched && !desc.value}"
+                ></textarea>
+                <div class="feedback-error" *ngIf="desc.touched && !desc.value" >
+                  commentaire est obligatoire.
+                </div>
+              </div>
+              <div class="form-group row ">
+
+                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 ">
+                  <button class="btn btn-space btn-dark"
+                          [disabled]="ln.errors?.required || ln.value < 0 || ln.value > 20 || !desc.value "
+                          (click)="submite()"
+                  >Envoyer</button>
+                  <button class="btn btn-space btn-default" type="reset">Annuler</button>
+                </div>
+              </div>
+            </form>
+
+          </ng-container>
+        </div>
+      </div>
+      <!-- ============================================================== -->
+      <!-- end top perfomimg  -->
+      <!-- ============================================================== -->
+    </div>
+  </div>
+</div>

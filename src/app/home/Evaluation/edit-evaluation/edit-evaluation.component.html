@@ -1,0 +1,152 @@
+<div class="container-fluid  dashboard-content">
+
+
+  <!-- ============================================================== -->
+  <!-- pageheader -->
+  <!-- ============================================================== -->
+  <div class="row">
+    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+      <div class="page-header">
+        <h2 class="pageheader-title">Modifier Evaluation</h2>
+        <div class="page-breadcrumb">
+          <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item"><a routerLink="/mission" class="breadcrumb-link">Mission</a></li>
+              <li class="breadcrumb-item"><a *ngIf="evaluation" [routerLink]="['/mission/Evaluation/',evaluation.missionId]"  class="breadcrumb-link">Evaluations</a></li>
+              <li class="breadcrumb-item active" aria-current="page">Modifier</li>
+            </ol>
+          </nav>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- ============================================================== -->
+  <!-- end pageheader -->
+  <!-- ============================================================== -->
+
+  <div class="row">
+    <!-- ============================================================== -->
+    <!-- Form Add  -->
+    <!-- ============================================================== -->
+    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+      <div class="card">
+        <h5 class="card-header">Modifier Evaluation</h5>
+        <div class="card-body">
+
+          <div class="col-4  offset-4" *ngIf="loader">
+            <img src="assets/images/loading.gif" style="margin-left: 15%">
+          </div>
+
+
+
+          <form *ngIf="!loader">
+
+
+
+
+            <div class="form-group">
+              <label for="Titre" class="col-form-label" >Titre  :<span class="text-danger">*</span></label>
+              <input id="Titre" [(ngModel)]="evaluation.title" #title="ngModel" name="title"
+                     type="text" class="form-control" placeholder="Titre" required=""
+                     [ngClass]="{'is-valid': title.touched && !title.errors?.required ,
+                                 'is-invalid': title.touched && title.errors?.required}"
+              >
+              <div class="feedback-error" *ngIf="title.touched && title.errors?.required" >
+                Titre est obligatoire.
+              </div>
+            </div>
+
+            <div class="row" >
+              <div class="form-group col-6">
+                <label for="typeEval" class="col-form-label" >Type Evaluation: <span class="text-danger">*</span></label>
+                <select [(ngModel)]="evaluation.type" id="typeEval" name="type"
+                        #typee="ngModel" class="form-control" required=""
+                        [ngClass]="{'is-valid': typee.touched && typee.value != null ,
+                                 'is-invalid': typee.touched && typee.value == null}"
+
+                >
+                  <option *ngFor="let typeev of TypeEval" [ngValue]="typeev"   >{{typeev}}</option>
+                </select>
+                <div class="feedback-error" *ngIf="!typee.value && typee.touched " >
+                  Type est obligatoire.
+                </div>
+              </div>
+              <div class="form-group col-6">
+                <label for="tyepRep" class="col-form-label" >Type Réponse: <span class="text-danger">*</span></label>
+                <select [(ngModel)]="evaluation.typeRes" id="tyepRep" name="typeRes"
+                        #typer="ngModel" class="form-control" required=""
+                        [ngClass]="{'is-valid': typer.touched && typer.value != null ,
+                                 'is-invalid': typer.touched && typer.value == null}"
+
+                >
+                  <option *ngFor="let typere of TypeRes" [ngValue]="typere"   >{{typere}}</option>
+                </select>
+                <div class="feedback-error" *ngIf="!typer.value && typer.touched " >
+                  Type est obligatoire.
+                </div>
+              </div>
+            </div>
+
+            <div class="row" >
+              <div class="form-group col-6">
+                <label for="sd" class="col-form-label" >Date Début : <span class="text-danger">*</span></label>
+                <input id="sd" [(ngModel)]="evaluation.startDate" #sd="ngModel" name="startDate"
+                       type="datetime-local" class="form-control" placeholder="Date Début" required=""
+                       [ngClass]="{'is-valid': sd.touched && !sd.errors?.required ,
+                                 'is-invalid': sd.touched && sd.errors?.required}"
+                >
+                <div class="feedback-error" *ngIf="sd.touched && sd.errors?.required" >
+                  Date Début est obligatoire.
+                </div>
+              </div>
+              <div class="form-group col-6" >
+                <label for="ed" class="col-form-label" >Date fin : <span class="text-danger">*</span></label>
+                <input id="ed" [(ngModel)]="evaluation.endDate" #ed="ngModel" name="endDate"
+                       type="datetime-local" class="form-control" placeholder="Date fin" required=""
+                       [ngClass]="{'is-valid': ed.touched && !ed.errors?.required ,
+                                 'is-invalid': ed.touched && ed.errors?.required}"
+                >
+                <div class="feedback-error" *ngIf="ed.touched && ed.errors?.required" >
+                  Date fin est obligatoire.
+                </div>
+              </div>
+            </div>
+
+
+
+            <div class="form-group">
+              <label class="col-form-label" >Détails Evaluation : <span class="text-danger">*</span></label>
+              <div class="table-responsive-md mx-auto" >
+                <ckeditor [editor]="Editor"  name="decription"   [(ngModel)]="evaluation.decription" class="mx-auto " size="100%"></ckeditor>
+              </div>
+            </div>
+
+
+
+
+            <div class="form-group row ">
+
+              <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 ">
+                <button class="btn btn-space btn-warning"  (click)="submite()"
+                        [disabled]="title.errors?.required || typee.value == null || typer.value == null
+                                    || sd.errors?.required || ed.errors?.required || evaluation.decription?.length === 0"
+                >Modifier</button>
+                <button class="btn btn-space btn-default" type="reset">Annuler</button>
+              </div>
+            </div>
+
+
+
+
+          </form>
+
+        </div>
+      </div>
+    </div>
+    <!-- ============================================================== -->
+    <!-- end form add  -->
+    <!-- ============================================================== -->
+  </div>
+
+
+</div>

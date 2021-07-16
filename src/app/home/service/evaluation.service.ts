@@ -51,7 +51,7 @@ export class EvaluationService {
 
   public UpEvalution(evaluation: Evaluation): Observable<Evaluation>
   {
-    return this.http.put<Groupe>(`${environment.baseUrl}:8084/Evaluation/`, evaluation);
+    return this.http.put<Evaluation>(`${environment.baseUrl}:8084/Evaluation/`, evaluation);
   }
 
   public RemoveEvalution(responseId: bigint): Observable<boolean>
@@ -74,9 +74,9 @@ export class EvaluationService {
     return this.http.post<Response>(`${environment.baseUrl}:8084/Evaluation/Response/`, response);
   }
 
-  public UpResponse(response: Response): Observable<Response>
+  public UpResponse(response: Response, repId: bigint | undefined): Observable<Response>
   {
-    return this.http.put<Response>(`${environment.baseUrl}:8084/Evaluation/Response/`, response);
+    return this.http.put<Response>(`${environment.baseUrl}:8084/Evaluation/Response/${repId}`, response);
   }
 
   public GetResponseById(responseId: bigint): Observable<Response>
